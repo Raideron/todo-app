@@ -10,6 +10,7 @@ export const TodoListItemSchema = z.object({
   /** Estimated time in hours */
   estimatedTime: z.number(),
   impact: z.number(),
+  todoListId: z.string(),
 });
 
 export interface TodoListItem extends z.infer<typeof TodoListItemSchema> {}
