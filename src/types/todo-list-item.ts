@@ -5,12 +5,15 @@ export const TodoListItemSchema = z.object({
   created: z.date({ coerce: true }),
   updated: z.date({ coerce: true }),
   name: z.string(),
-  description: z.string(),
-  deadline: z.date({ coerce: true }),
+  description: z.string().optional(),
+  deadline: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : undefined)),
   /** Estimated time in hours */
-  estimatedTime: z.number(),
-  impact: z.number(),
-  todoListId: z.string(),
+  estimate: z.number().optional(),
+  impact: z.number().optional(),
+  todo_list_id: z.string(),
 });
 
 export interface TodoListItem extends z.infer<typeof TodoListItemSchema> {}
