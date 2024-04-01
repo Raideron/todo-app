@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
 
 interface EditableCellProps {
@@ -9,6 +9,7 @@ interface EditableCellProps {
   isEditing: boolean;
   onChange: (value: string) => void;
   onClick: () => void;
+  onEnter: () => void;
 }
 
 export const EditableCell: React.FC<EditableCellProps> = (props) => {
@@ -37,7 +38,17 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
   return (
     <td onClick={props.onClick}>
       {isEditing ? (
-        <Form.Control type={props.type} value={getValue()} onChange={(e) => props.onChange(e.target.value)} />
+        <Form.Control
+          autoFocus
+          type={props.type}
+          value={getValue()}
+          onChange={(e) => props.onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              props.onEnter();
+            }
+          }}
+        />
       ) : (
         <span>{getDisplayValue()}</span>
       )}
