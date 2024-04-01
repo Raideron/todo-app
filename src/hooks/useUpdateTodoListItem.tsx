@@ -3,7 +3,7 @@ import PocketBase from 'pocketbase';
 
 import { GET_TODO_LIST_ITEMS } from '@/api/api-keys';
 import { POCKET_BASE_URL } from '@/constants/pocketbase';
-import { TodoListItem } from '@/types/todo-list-item';
+import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 export const useUpdateTodoListItem = (todoListItemId: string) => {
   const queryClient = useQueryClient();
@@ -11,7 +11,8 @@ export const useUpdateTodoListItem = (todoListItemId: string) => {
   const updateTodoListItemMutation = useMutation({
     mutationFn: async (todoListItem: TodoListItem) => {
       const pb = new PocketBase(POCKET_BASE_URL);
-      await pb.collection('todo_list_items').update(todoListItem.id, todoListItem);
+      const result = await pb.collection('todo_list_items').update(todoListItem.id, todoListItem);
+      return TodoListItemSchema.parse(result);
     },
     onSettled: async () => {
       queryClient.invalidateQueries({

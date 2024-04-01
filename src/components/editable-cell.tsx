@@ -6,11 +6,13 @@ import { Form } from 'react-bootstrap';
 interface EditableCellProps {
   value: string | number | Date | null;
   type: 'text' | 'number' | 'date';
+  isEditing: boolean;
   onChange: (value: string) => void;
+  onClick: () => void;
 }
 
 export const EditableCell: React.FC<EditableCellProps> = (props) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const isEditing = props.isEditing;
 
   const getValue = (): string => {
     if (props.value === null) {
@@ -33,7 +35,7 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
   };
 
   return (
-    <td onClick={() => setIsEditing(true)}>
+    <td onClick={props.onClick}>
       {isEditing ? (
         <Form.Control type={props.type} value={getValue()} onChange={(e) => props.onChange(e.target.value)} />
       ) : (
