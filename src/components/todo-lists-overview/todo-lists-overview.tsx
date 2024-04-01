@@ -20,7 +20,7 @@ export const TodoListsOverview: React.FC = () => {
           </CardHeader>
 
           <CardBody className='p-0'>
-            <TodoListComp todoList={list}></TodoListComp>
+            <TodoListComp todoList={list} />
           </CardBody>
         </Card>
       ))}

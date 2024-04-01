@@ -7,7 +7,7 @@ import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
 import { TodoList } from '@/types/todo-list';
 
-import { EditableField } from '../editable-field';
+import { EditableCell } from '../editable-cell';
 
 interface TodoListCompProps {
   todoList: TodoList;
@@ -33,41 +33,35 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         <tbody>
           {todoListItemsQuery.data?.map((item) => (
             <tr key={item.id}>
-              <td>
-                <EditableField
-                  value={item.name}
-                  type='text'
-                  onChange={(value) => todoListItemMutation.mutate({ ...item, name: value })}
-                ></EditableField>
-              </td>
-              <td>
-                <EditableField
-                  value={item.description ?? null}
-                  type='text'
-                  onChange={(value) => todoListItemMutation.mutate({ ...item, description: value })}
-                ></EditableField>
-              </td>
-              <td>
-                <EditableField
-                  value={item.deadline ?? null}
-                  type='date'
-                  onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
-                ></EditableField>
-              </td>
-              <td>
-                <EditableField
-                  value={item.estimate ?? null}
-                  type='number'
-                  onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
-                ></EditableField>
-              </td>
-              <td>
-                <EditableField
-                  value={item.impact ?? null}
-                  type='number'
-                  onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
-                ></EditableField>
-              </td>
+              <EditableCell
+                value={item.name}
+                type='text'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, name: value })}
+              />
+
+              <EditableCell
+                value={item.description ?? null}
+                type='text'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, description: value })}
+              />
+
+              <EditableCell
+                value={item.deadline ?? null}
+                type='date'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
+              />
+
+              <EditableCell
+                value={item.estimate ?? null}
+                type='number'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
+              />
+
+              <EditableCell
+                value={item.impact ?? null}
+                type='number'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
+              />
             </tr>
           ))}
         </tbody>

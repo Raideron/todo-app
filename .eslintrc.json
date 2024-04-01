@@ -67,6 +67,7 @@
     "max-lines": ["warn", { "max": 1200 }],
     "max-lines-per-function": ["warn", { "max": 800 }],
     "max-statements": ["warn", { "max": 56 }],
-    "no-unused-private-class-members": "warn"
+    "no-unused-private-class-members": "warn",
+    "react/self-closing-comp": "warn"
   }
 }
