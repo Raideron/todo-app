@@ -15,9 +15,11 @@ export const TodoListsOverview: React.FC = () => {
       <h1>TodoListsOverview</h1>
       {todoListsQuery.data?.map((list) => (
         <Card key={list.id}>
-          <CardHeader>{list.name}</CardHeader>
+          <CardHeader>
+            <h3>{list.name}</h3>
+          </CardHeader>
 
-          <CardBody>
+          <CardBody className='p-0'>
             <TodoListComp todoList={list}></TodoListComp>
           </CardBody>
         </Card>

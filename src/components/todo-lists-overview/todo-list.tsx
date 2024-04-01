@@ -13,11 +13,9 @@ interface TodoListCompProps {
 export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItems = useGetTodoListItems(props.todoList.id);
 
-  console.log({ ...todoListItems });
-
   return (
     <div>
-      <Table striped bordered hover>
+      <Table striped bordered hover className='m-0'>
         <thead>
           <tr>
             <th>Name</th>

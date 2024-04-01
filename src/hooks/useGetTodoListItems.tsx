@@ -17,8 +17,6 @@ export const useGetTodoListItems = (todoListId: string) => {
         filter: `todo_list_id = "${todoListId}"`,
       });
 
-      console.log({ result });
-
       const items = result.map<TodoListItem>((item) => TodoListItemSchema.parse(item));
 
       return items;
