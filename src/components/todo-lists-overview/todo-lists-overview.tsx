@@ -1,11 +1,10 @@
+'use client';
+
 import React from 'react';
 
 import { useGetTodoLists } from '@/hooks/useGetTodoLists';
 
-interface TodoListsOverviewProps {}
-
-export const TodoListsOverview: React.FC<TodoListsOverviewProps> = (props) => {
-  console.log('TodoListsOverview', props);
+export const TodoListsOverview: React.FC = () => {
   const todoListsQuery = useGetTodoLists();
 
   return (
