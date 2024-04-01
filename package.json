@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit --pretty",
+    "typecheck:watch": "npm run typecheck -- --watch",
     "check": "npm run typecheck && npm run lint"
   },
   "dependencies": {

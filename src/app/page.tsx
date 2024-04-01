@@ -1,5 +1,9 @@
+import { TodoListsOverview } from '@/components/todo-lists-overview/todo-lists-overview';
+
 export default function Home() {
   return (
-    <main>Home</main>
+    <main>
+      <TodoListsOverview></TodoListsOverview>
+    </main>
   );
 }
