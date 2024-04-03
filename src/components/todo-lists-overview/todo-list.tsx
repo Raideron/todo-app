@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
 
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
+import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
 import { TodoList } from '@/types/todo-list';
@@ -18,8 +19,9 @@ interface TodoListCompProps {
 
 export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItemsQuery = useGetTodoListItems(props.todoList.id);
-  const todoListItemMutation = useUpdateTodoListItem(props.todoList.id);
-  const todoListItemCreationMutation = useCreateTodoListItem(props.todoList.id);
+  const todoListItemMutation = useUpdateTodoListItem();
+  const todoListItemCreationMutation = useCreateTodoListItem();
+  const todoListItemDeletionMutation = useDeleteTodoListItem();
 
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
 
@@ -78,10 +80,16 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             <tr key={item.id}>
               <td>
                 <Form.Check
+                  className='d-inline-block'
                   type='checkbox'
                   checked={item.isCompleted}
                   onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
                 />
+                {item.isCompleted && (
+                  <Button variant='danger' size='sm' onClick={() => todoListItemDeletionMutation.mutate(item)}>
+                    Delete
+                  </Button>
+                )}
               </td>
 
               <EditableCell
