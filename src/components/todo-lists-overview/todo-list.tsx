@@ -79,17 +79,22 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           {sortedListWithEmptyRow.map((item) => (
             <tr key={item.id}>
               <td>
-                <Form.Check
-                  className='d-inline-block'
-                  type='checkbox'
-                  checked={item.isCompleted}
-                  onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
-                />
-                {item.isCompleted && (
-                  <Button variant='danger' size='sm' onClick={() => todoListItemDeletionMutation.mutate(item)}>
+                <div className='d-flex align-items-center h-100'>
+                  <Form.Check
+                    className='d-inline-block'
+                    type='checkbox'
+                    checked={item.isCompleted}
+                    onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
+                  />
+                  <Button
+                    variant='outline-danger'
+                    size='sm'
+                    className='ms-2'
+                    onClick={() => todoListItemDeletionMutation.mutate(item)}
+                  >
                     Delete
                   </Button>
-                )}
+                </div>
               </td>
 
               <EditableCell
