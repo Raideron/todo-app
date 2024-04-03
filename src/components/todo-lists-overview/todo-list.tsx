@@ -35,6 +35,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     name: '',
     todo_list_id: props.todoList.id,
     isCompleted: false,
+    estimate: 0,
+    impact: 0,
+    confidence: 0,
   };
 
   const handleCreateTodoListItem = async () => {
@@ -50,9 +53,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             <th />
             <th>Name</th>
             <th>Description</th>
-            <th>Deadline</th>
             <th>Estimate</th>
             <th>Impact</th>
+            <th>Deadline</th>
+            <th>Confidence</th>
             <th>Prio Score</th>
             <th />
           </tr>
@@ -101,6 +105,26 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
               />
 
               <EditableCell
+                value={item.estimate || null}
+                type='number'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
+                isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
+                onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
+                onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
+              />
+
+              <EditableCell
+                value={item.impact || null}
+                type='number'
+                onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
+                isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
+                onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
+                onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
+              />
+
+              <EditableCell
                 value={item.deadline ?? null}
                 type='date'
                 onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
@@ -111,27 +135,17 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
               />
 
               <EditableCell
-                value={item.estimate ?? null}
+                value={item.confidence || null}
                 type='number'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
-                onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
-              />
-
-              <EditableCell
-                value={item.impact ?? null}
-                type='number'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
-                onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
+                onChange={(value) => todoListItemMutation.mutate({ ...item, confidence: parseFloat(value) })}
+                isEditing={editingCell?.id === item.id && editingCell.field === 'confidence'}
+                onClick={() => setEditingCell({ id: item.id, field: 'confidence' })}
                 onEnter={() => setEditingCell(null)}
                 isComplete={item.isCompleted}
               />
 
               <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined }}>
-                {getPrioScore(item)}
+                {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
               </td>
 
               <td>

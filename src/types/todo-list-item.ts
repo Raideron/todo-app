@@ -11,10 +11,11 @@ export const TodoListItemSchema = z.object({
     .optional()
     .transform((val) => (val ? new Date(val) : undefined)),
   /** Estimated time in hours */
-  estimate: z.number().optional(),
-  impact: z.number().optional(),
+  estimate: z.number(),
+  impact: z.number(),
   todo_list_id: z.string(),
   isCompleted: z.boolean(),
+  confidence: z.number(),
 });
 
 export interface TodoListItem extends z.infer<typeof TodoListItemSchema> {}
