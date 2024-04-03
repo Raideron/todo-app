@@ -4,7 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Container, Navbar } from 'react-bootstrap';
+import { Button, Container, Image, Navbar } from 'react-bootstrap';
+
+import AuthWrapper, { usePbAuth } from '@/contexts/auth-context';
+import { pb } from '@/pocketbase';
 
 const queryClient = new QueryClient();
 
@@ -13,22 +16,63 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log(pb.authStore.model);
   return (
     <html lang='en'>
       <body>
-        <QueryClientProvider client={queryClient}>
-          <Navbar>
-            <Container>
-              <Navbar.Brand>
-                <Link href='/'>Home</Link>
-              </Navbar.Brand>
-              <Navbar.Collapse className='gap-3'></Navbar.Collapse>
-            </Container>
-          </Navbar>
-
-          <Container>{children}</Container>
-        </QueryClientProvider>
+        <AuthWrapper>
+          <QueryClientProvider client={queryClient}>
+            <LayoutWithContext>{children}</LayoutWithContext>
+          </QueryClientProvider>
+        </AuthWrapper>
       </body>
     </html>
   );
 }
+
+const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const auth = usePbAuth();
+
+  console.log(auth.user);
+
+  return (
+    <>
+      <Navbar>
+        <Container>
+          <Navbar.Brand>
+            <Link href='/'>Home</Link>
+          </Navbar.Brand>
+
+          <Navbar.Collapse className='gap-3' />
+
+          <Navbar.Collapse className='justify-content-end'>
+            {auth.user ? (
+              <>
+                <Navbar.Text>Signed in as: {auth.user.name || auth.user.username}</Navbar.Text>
+                <Image
+                  className='ms-2 me-3'
+                  src={auth.user.avatarUrl}
+                  roundedCircle
+                  width={30}
+                  height={30}
+                  alt='Avatar'
+                />
+                <Button onClick={auth.signOut} variant='outline-danger'>
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <Navbar.Text>
+                <Button onClick={auth.githubSignIn} variant='outline-primary'>
+                  Sign in with GitHub
+                </Button>
+              </Navbar.Text>
+            )}
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      <Container>{children}</Container>
+    </>
+  );
+};
