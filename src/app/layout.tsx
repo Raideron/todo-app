@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
 
 import AuthWrapper, { usePbAuth } from '@/contexts/auth-context';
-import { pb } from '@/pocketbase';
 
 const queryClient = new QueryClient();
 
@@ -16,7 +15,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log(pb.authStore.model);
   return (
     <html lang='en'>
       <body>
@@ -32,8 +30,6 @@ export default function RootLayout({
 
 const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = usePbAuth();
-
-  console.log(auth.user);
 
   return (
     <>
