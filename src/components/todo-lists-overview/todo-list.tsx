@@ -4,6 +4,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
 
+import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
@@ -24,17 +25,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItemDeletionMutation = useDeleteTodoListItem();
 
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
-
-  const getPrioScore = (item: TodoListItem): number => {
-    if (item.isCompleted) {
-      return -1;
-    }
-
-    const estimate = item.estimate ?? 0;
-    const impact = item.impact ?? 0;
-
-    return impact / (estimate + 1);
-  };
 
   const sortedListWithEmptyRow: TodoListItem[] = _.orderBy(todoListItemsQuery.data, getPrioScore, 'desc');
 
