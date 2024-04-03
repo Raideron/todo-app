@@ -14,6 +14,7 @@ export const TodoListItemSchema = z.object({
   estimate: z.number().optional(),
   impact: z.number().optional(),
   todo_list_id: z.string(),
+  isCompleted: z.boolean(),
 });
 
 export interface TodoListItem extends z.infer<typeof TodoListItemSchema> {}

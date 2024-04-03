@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Form, Table } from 'react-bootstrap';
 
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
@@ -24,6 +24,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
 
   const getPrioScore = (item: TodoListItem): number => {
+    if (item.isCompleted) {
+      return -1;
+    }
+
     const estimate = item.estimate ?? 0;
     const impact = item.impact ?? 0;
 
@@ -38,6 +42,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     updated: new Date(),
     name: '',
     todo_list_id: props.todoList.id,
+    isCompleted: false,
   };
 
   const handleCreateTodoListItem = async () => {
@@ -50,6 +55,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       <Table striped bordered hover className='m-0'>
         <thead onClick={() => setEditingCell(null)}>
           <tr>
+            <th />
             <th>Name</th>
             <th>Description</th>
             <th>Deadline</th>
@@ -61,7 +67,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
         <tbody>
           <tr>
-            <td colSpan={6}>
+            <td colSpan={7}>
               <Button onClick={handleCreateTodoListItem} variant='primary'>
                 Add new item
               </Button>
@@ -70,6 +76,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
           {sortedListWithEmptyRow.map((item) => (
             <tr key={item.id}>
+              <td>
+                <Form.Check
+                  type='checkbox'
+                  checked={item.isCompleted}
+                  onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
+                />
+              </td>
+
               <EditableCell
                 value={item.name}
                 type='text'
@@ -77,6 +91,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 isEditing={editingCell?.id === item.id && editingCell.field === 'name'}
                 onClick={() => setEditingCell({ id: item.id, field: 'name' })}
                 onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
               />
 
               <EditableCell
@@ -86,6 +101,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 isEditing={editingCell?.id === item.id && editingCell.field === 'description'}
                 onClick={() => setEditingCell({ id: item.id, field: 'description' })}
                 onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
               />
 
               <EditableCell
@@ -95,6 +111,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 isEditing={editingCell?.id === item.id && editingCell.field === 'deadline'}
                 onClick={() => setEditingCell({ id: item.id, field: 'deadline' })}
                 onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
               />
 
               <EditableCell
@@ -104,6 +121,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
                 onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
                 onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
               />
 
               <EditableCell
@@ -113,9 +131,12 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
                 onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
                 onEnter={() => setEditingCell(null)}
+                isComplete={item.isCompleted}
               />
 
-              <td>{getPrioScore(item)}</td>
+              <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined }}>
+                {getPrioScore(item)}
+              </td>
             </tr>
           ))}
         </tbody>
