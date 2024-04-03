@@ -64,12 +64,13 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             <th>Estimate</th>
             <th>Impact</th>
             <th>Prio Score</th>
+            <th />
           </tr>
         </thead>
 
         <tbody>
           <tr>
-            <td colSpan={7}>
+            <td colSpan={8}>
               <Button onClick={handleCreateTodoListItem} variant='primary'>
                 Add new item
               </Button>
@@ -86,14 +87,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                     checked={item.isCompleted}
                     onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
                   />
-                  <Button
-                    variant='outline-danger'
-                    size='sm'
-                    className='ms-2'
-                    onClick={() => todoListItemDeletionMutation.mutate(item)}
-                  >
-                    Delete
-                  </Button>
                 </div>
               </td>
 
@@ -149,6 +142,17 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
               <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined }}>
                 {getPrioScore(item)}
+              </td>
+
+              <td>
+                <Button
+                  variant='outline-danger'
+                  size='sm'
+                  className='ms-2'
+                  onClick={() => todoListItemDeletionMutation.mutate(item)}
+                >
+                  Delete
+                </Button>
               </td>
             </tr>
           ))}
