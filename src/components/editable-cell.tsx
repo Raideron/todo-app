@@ -3,6 +3,8 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
+import { getDaysRemaining } from '@/get-prio-score';
+
 interface EditableCellProps {
   value: string | number | Date | null;
   type: 'text' | 'number' | 'date';
@@ -30,8 +32,12 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
     if (props.value === null) {
       return '';
     }
-    if (props.type === 'date') {
-      return (props.value as Date).toISOString().split('T')[0];
+    if (props.type === 'date' && props.value instanceof Date) {
+      const formattedDate = Intl.DateTimeFormat('nl-NL', {
+        dateStyle: 'long',
+      }).format(props.value);
+      const daysRemaining = getDaysRemaining(props.value);
+      return `${formattedDate} (${daysRemaining} days)`;
     }
 
     if (typeof props.value === 'number') {

@@ -8,20 +8,18 @@ export const getPrioScore = (item: TodoListItem): number => {
   const impact = item.impact || 2;
   const confidence = item.confidence || 80;
   const estimate = item.estimate || 1;
-  const daysRemaining = getDaysRemaining(item) ?? 30;
+  const daysRemaining = getDaysRemaining(item.deadline) ?? 30;
 
   return (impact * confidence) / Math.max(estimate * daysRemaining, 1);
 };
 
-export const getDaysRemaining = (item: TodoListItem): number | null => {
-  const deadline = item.deadline;
-
-  if (!deadline) {
+export const getDaysRemaining = (date: Date | undefined | null): number | null => {
+  if (!date) {
     return null;
   }
 
   const now = new Date();
-  const diff = deadline.getTime() - now.getTime();
+  const diff = date.getTime() - now.getTime();
   const diffDays = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
   return diffDays;
