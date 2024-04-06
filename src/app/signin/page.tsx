@@ -30,7 +30,7 @@ const SignIn: NextPage = () => {
       const code = params.get('code');
 
       // cancel signin logic if not a redirect
-      if (!localAuthProvider || !code || localAuthProvider.state !== params.get('state')) {
+      if (!code || localAuthProvider.state !== params.get('state')) {
         return;
       }
 

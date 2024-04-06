@@ -30,6 +30,7 @@ const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
         .listAuthMethods()
         .then((methods) => methods)
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.error(err);
         });
 
