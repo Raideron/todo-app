@@ -9,7 +9,9 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit --pretty",
     "typecheck:watch": "npm run typecheck -- --watch",
-    "check": "npm run typecheck && npm run lint"
+    "check": "npm run typecheck && npm run lint",
+    "pi:deploy:next": "git fetch && git pull && npm run build && npm run start",
+    "pi:deploy:pb": "git fetch && git pull && ./pocketbase-arm64 serve"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.28.9",
