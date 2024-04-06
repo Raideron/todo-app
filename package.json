@@ -10,8 +10,9 @@
     "typecheck": "tsc --noEmit --pretty",
     "typecheck:watch": "npm run typecheck -- --watch",
     "check": "npm run typecheck && npm run lint",
-    "pi:deploy:next": "git fetch && git pull && npm ci && npm run build && npm run start",
-    "pi:deploy:pb": "git fetch && git pull && chmod +x ./pocketbase-armv7l && ./pocketbase-armv7l serve"
+    "git:update": "git fetch && git pull",
+    "pi:deploy:next": "npm run git:update && npm ci && npm run build && npm run start",
+    "pi:deploy:pb": "npm run git:update && chmod +x ./pocketbase-armv7l && ./pocketbase-armv7l serve"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.28.9",
