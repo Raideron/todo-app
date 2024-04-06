@@ -3,3 +3,5 @@
 
 # Ignore next config because of ESLint tsconfig error
 next.config.js
+
+/public
