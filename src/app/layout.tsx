@@ -3,7 +3,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Metadata } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
@@ -11,10 +10,6 @@ import { Button, Container, Image, Navbar } from 'react-bootstrap';
 import AuthWrapper, { usePbAuth } from '@/contexts/auth-context';
 
 const queryClient = new QueryClient();
-
-export const metadata: Metadata = {
-  title: 'Todo App',
-};
 
 export default function RootLayout({
   children,
