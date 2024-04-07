@@ -20,6 +20,7 @@ export const useGetTodoListItems = (todoListId: string) => {
       return items;
     },
     enabled: !!todoListId,
+    refetchInterval: 1000 * 60 * 5,
   });
 
   return findingQuery;
