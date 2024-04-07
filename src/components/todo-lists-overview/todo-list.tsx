@@ -153,7 +153,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           <tr>
             <th />
             <th>Name</th>
-            <th>Description</th>
             <th>Estimate</th>
             <th>Impact</th>
             <th>Deadline</th>
@@ -184,16 +183,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 onClick={() => setEditingCell({ id: item.id, field: 'name' })}
                 onEnter={() => setEditingCell(null)}
                 isComplete={item.isCompleted}
-              />
-
-              <EditableCell
-                value={item.description ?? null}
-                type='text'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, description: value })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'description'}
-                onClick={() => setEditingCell({ id: item.id, field: 'description' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
+                subText={item.description}
               />
 
               <EditableCell

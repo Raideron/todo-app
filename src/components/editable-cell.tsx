@@ -1,5 +1,6 @@
 'use client';
 
+import classNames from 'classnames';
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
@@ -8,6 +9,7 @@ import { getDaysRemaining } from '@/get-prio-score';
 interface EditableCellProps {
   value: string | number | Date | null;
   type: 'text' | 'number' | 'date';
+  subText?: string;
   isEditing: boolean;
   isComplete: boolean;
   onChange: (value: string) => void;
@@ -75,8 +77,22 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
           }}
         />
       ) : (
-        // striketrough if completed
-        <span style={{ textDecorationLine: props.isComplete ? 'line-through' : undefined }}>{getDisplayValue()}</span>
+        <>
+          <span className='d-block' style={{ textDecorationLine: props.isComplete ? 'line-through' : undefined }}>
+            {getDisplayValue()}
+          </span>
+          <span
+            className={'d-block text-muted'}
+            style={{
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              maxWidth: '12em',
+            }}
+          >
+            {props.subText}
+          </span>
+        </>
       )}
     </td>
   );
