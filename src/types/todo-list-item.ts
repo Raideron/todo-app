@@ -10,6 +10,10 @@ export const TodoListItemSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? new Date(val) : undefined)),
+  startDate: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : undefined)),
   /** Estimated time in hours */
   estimate: z.number(),
   impact: z.number(),

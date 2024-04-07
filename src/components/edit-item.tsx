@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Form, FormLabel, Modal, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Form, FormLabel, Modal, Row } from 'react-bootstrap';
 
 import { TodoListItem } from '@/types/todo-list-item';
 
@@ -17,6 +17,20 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
     if (e.key === 'Enter') {
       props.onSave();
     }
+  };
+
+  const handleSnooze = async (timeInMinutes: number) => {
+    if (!props.localItem) {
+      return;
+    }
+
+    if (props.localItem.startDate && props.localItem.startDate > new Date()) {
+      return;
+    }
+
+    const newStartDate = new Date(Date.now() + timeInMinutes * 60 * 1000);
+    props.onChange({ startDate: newStartDate });
+    setTimeout(() => props.onSave(), 10);
   };
 
   return (
@@ -76,6 +90,16 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               />
             </Col>
             <Col xs={6} className='mb-2'>
+              <Form.Label htmlFor='startDate'>Start Date</Form.Label>
+              <Form.Control
+                id='startDate'
+                value={props.localItem.startDate?.toISOString().split('T')[0]}
+                onChange={(e) => props.onChange({ startDate: new Date(e.target.value) })}
+                type='date'
+              />
+            </Col>
+
+            <Col xs={6} className='mb-2'>
               <Form.Label htmlFor='confidence'>Confidence</Form.Label>
               <Form.Control
                 id='confidence'
@@ -83,6 +107,21 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
                 onChange={(e) => props.onChange({ confidence: +e.target.value })}
                 type='number'
               />
+            </Col>
+
+            <Col xs={12} className='mb-2'>
+              <Form.Label>Snooze</Form.Label>
+              <ButtonGroup className='d-block'>
+                <Button variant='outline-warning' onClick={() => handleSnooze(10)}>
+                  10 minutes
+                </Button>
+                <Button variant='outline-warning' onClick={() => handleSnooze(60)}>
+                  1 hour
+                </Button>
+                <Button variant='outline-warning' onClick={() => handleSnooze(60 * 24)}>
+                  1 day
+                </Button>
+              </ButtonGroup>
             </Col>
           </Row>
         )}
