@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
 
 import AuthWrapper, { usePbAuth } from '@/contexts/auth-context';
+import { usePbHealthCheck } from '@/hooks/usePbHealthCheck';
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ export default function RootLayout({
 
 const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const auth = usePbAuth();
+  const { data: pbHealth } = usePbHealthCheck();
 
   return (
     <>
@@ -47,7 +49,7 @@ const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }
           <Navbar.Collapse className='gap-3' />
 
           <Navbar.Collapse className='justify-content-end'>
-            {auth.user ? (
+            {auth.user && (
               <>
                 <Navbar.Text>Signed in as: {auth.user.name || auth.user.username}</Navbar.Text>
                 <Image
@@ -62,7 +64,8 @@ const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }
                   Sign out
                 </Button>
               </>
-            ) : (
+            )}
+            {!auth.user && pbHealth?.code === 200 && (
               <Navbar.Text>
                 <Button onClick={auth.githubSignIn} variant='outline-primary'>
                   Sign in with GitHub
