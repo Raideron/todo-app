@@ -12,6 +12,7 @@ import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
 import { TodoList } from '@/types/todo-list';
 import { TodoListItem } from '@/types/todo-list-item';
 
+import { EditTodoItemModal } from '../edit-item';
 import { EditableCell } from '../editable-cell';
 
 interface TodoListCompProps {
@@ -25,24 +26,38 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItemDeletionMutation = useDeleteTodoListItem();
 
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
+  const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
 
   const sortedListWithEmptyRow: TodoListItem[] = _.orderBy(todoListItemsQuery.data, getPrioScore, 'desc');
 
-  const newTodoListItem: TodoListItem = {
-    id: '',
-    created: new Date(),
-    updated: new Date(),
-    name: '',
-    todo_list_id: props.todoList.id,
-    isCompleted: false,
-    estimate: 0,
-    impact: 0,
-    confidence: 0,
+  const handleCreateTodoListItem = async () => {
+    const newTodoListItem: TodoListItem = {
+      id: '',
+      created: new Date(),
+      updated: new Date(),
+      name: '',
+      todo_list_id: props.todoList.id,
+      isCompleted: false,
+      estimate: 0,
+      impact: 0,
+      confidence: 0,
+    };
+
+    setOpenedItem(newTodoListItem);
   };
 
-  const handleCreateTodoListItem = async () => {
-    await todoListItemCreationMutation.mutateAsync(newTodoListItem);
-    setEditingCell({ id: newTodoListItem.id, field: 'name' });
+  const handleModalSave = async () => {
+    if (!openedItem) {
+      return;
+    }
+
+    if (!openedItem.id) {
+      await todoListItemCreationMutation.mutateAsync(openedItem);
+    } else {
+      await todoListItemMutation.mutateAsync(openedItem);
+    }
+
+    setOpenedItem(null);
   };
 
   return (
@@ -64,7 +79,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
         <tbody>
           <tr>
-            <td colSpan={8}>
+            <td colSpan={9}>
               <Button onClick={handleCreateTodoListItem} variant='primary'>
                 Add new item
               </Button>
@@ -162,6 +177,20 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           ))}
         </tbody>
       </Table>
+
+      <EditTodoItemModal
+        localItem={openedItem}
+        onChange={(partialItem) =>
+          setOpenedItem((oldItem) => {
+            if (!oldItem) {
+              return oldItem;
+            }
+            return { ...oldItem, ...partialItem };
+          })
+        }
+        onSave={() => handleModalSave()}
+        onClose={() => setOpenedItem(null)}
+      />
     </div>
   );
 };
