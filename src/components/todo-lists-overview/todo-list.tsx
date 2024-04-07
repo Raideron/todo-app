@@ -27,6 +27,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
+  const [refineList, setRefineList] = useState<string[]>([]);
 
   const sortedListWithEmptyRow: TodoListItem[] = _.orderBy(todoListItemsQuery.data, getPrioScore, 'desc');
 
@@ -57,11 +58,45 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       await todoListItemMutation.mutateAsync(openedItem);
     }
 
-    setOpenedItem(null);
+    if (refineList.length > 0) {
+      continueRefining(refineList);
+    } else {
+      setOpenedItem(null);
+    }
+  };
+
+  const getRefinementList = () =>
+    todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((item) => !item.estimate || !item.impact) ?? [];
+
+  const startRefining = () => {
+    const itemsToRefine = getRefinementList();
+    const itemIdsToRefine = itemsToRefine.map((item) => item.id);
+    setRefineList(itemIdsToRefine);
+    continueRefining(itemIdsToRefine);
+  };
+
+  const continueRefining = (itemIdsToRefine: string[]) => {
+    const itemIdToRefine = _.first(itemIdsToRefine);
+    const itemToRefine = todoListItemsQuery.data?.find((item) => item.id === itemIdToRefine) ?? null;
+    setOpenedItem(itemToRefine);
+    setRefineList(_.tail(itemIdsToRefine));
   };
 
   return (
     <div>
+      <div className='d-flex p-2 gap-2'>
+        <Button onClick={handleCreateTodoListItem} variant='primary'>
+          Add new item
+        </Button>
+
+        <Button
+          onClick={startRefining}
+          variant={getRefinementList().length ? 'outline-primary' : 'outline-secondary'}
+          disabled={!getRefinementList().length}
+        >
+          Refine list
+        </Button>
+      </div>
       <Table striped bordered hover className='m-0' responsive>
         <thead onClick={() => setEditingCell(null)}>
           <tr>
@@ -78,14 +113,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         </thead>
 
         <tbody>
-          <tr>
-            <td colSpan={9}>
-              <Button onClick={handleCreateTodoListItem} variant='primary'>
-                Add new item
-              </Button>
-            </td>
-          </tr>
-
           {sortedListWithEmptyRow.map((item) => (
             <tr key={item.id}>
               <td>
