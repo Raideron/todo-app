@@ -5,6 +5,7 @@ export const TodoListSchema = z.object({
   created: z.date({ coerce: true }),
   updated: z.date({ coerce: true }),
   name: z.string(),
+  user_id: z.string(),
 });
 
 export interface TodoList extends z.infer<typeof TodoListSchema> {}

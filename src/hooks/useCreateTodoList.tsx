@@ -9,7 +9,8 @@ export const useCreateTodoList = () => {
 
   const createTodoListMutation = useMutation({
     mutationFn: async () => {
-      const result = await pb.collection('todo_lists').create({ name: 'My Todo List' });
+      const currentUser = await pb.collection('users').getFirstListItem('');
+      const result = await pb.collection('todo_lists').create({ name: 'My Todo List', user_id: currentUser.id });
       return TodoListSchema.parse(result);
     },
     onSettled: async () => {
