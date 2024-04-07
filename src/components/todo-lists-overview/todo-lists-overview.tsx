@@ -1,14 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardBody, CardHeader } from 'react-bootstrap';
 
+import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useGetTodoLists } from '@/hooks/useGetTodoLists';
 
 import { TodoListComp } from './todo-list';
 
 export const TodoListsOverview: React.FC = () => {
   const todoListsQuery = useGetTodoLists();
+  const createTodoListMutation = useCreateTodoList();
+
+  useEffect(() => {
+    if (todoListsQuery.data?.length === 0) {
+      createTodoListMutation.mutate();
+    }
+  }, [todoListsQuery.data]);
 
   return (
     <>
