@@ -115,6 +115,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
       const text = await file.text();
       const items = z.array(TodoListItemSchema).parse(JSON.parse(text));
+      items.forEach((item) => {
+        item.todo_list_id = props.todoList.id;
+      });
 
       await Promise.all(items.map((item) => todoListItemCreationMutation.mutateAsync(item)));
     };
