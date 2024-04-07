@@ -47,7 +47,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   return (
     <div>
-      <Table striped bordered hover className='m-0'>
+      <Table striped bordered hover className='m-0' responsive>
         <thead onClick={() => setEditingCell(null)}>
           <tr>
             <th />
