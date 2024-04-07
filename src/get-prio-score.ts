@@ -2,6 +2,10 @@ import { TodoListItem } from './types/todo-list-item';
 
 export const getPrioScore = (item: TodoListItem): number => {
   if (item.isCompleted) {
+    return -2;
+  }
+
+  if (item.startDate && item.startDate > new Date()) {
     return -1;
   }
 

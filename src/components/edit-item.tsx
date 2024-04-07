@@ -30,7 +30,6 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
 
     const newStartDate = new Date(Date.now() + timeInMinutes * 60 * 1000);
     props.onChange({ startDate: newStartDate });
-    setTimeout(() => props.onSave(), 10);
   };
 
   return (
@@ -84,7 +83,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Label htmlFor='deadline'>Deadline</Form.Label>
               <Form.Control
                 id='deadline'
-                value={props.localItem.deadline?.toISOString().split('T')[0]}
+                value={props.localItem.deadline?.toISOString().split('T')[0] ?? ''}
                 onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
                 type='date'
               />
@@ -93,7 +92,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Label htmlFor='startDate'>Start Date</Form.Label>
               <Form.Control
                 id='startDate'
-                value={props.localItem.startDate?.toISOString().split('T')[0]}
+                value={props.localItem.startDate?.toISOString().split('T')[0] ?? ''}
                 onChange={(e) => props.onChange({ startDate: new Date(e.target.value) })}
                 type='date'
               />
