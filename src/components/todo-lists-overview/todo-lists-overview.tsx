@@ -12,7 +12,6 @@ export const TodoListsOverview: React.FC = () => {
 
   return (
     <>
-      <h1>TodoListsOverview</h1>
       {todoListsQuery.data?.map((list) => (
         <Card key={list.id}>
           <CardHeader>
