@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Form, Table } from 'react-bootstrap';
+import { z } from 'zod';
 
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
@@ -10,7 +11,7 @@ import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
 import { TodoList } from '@/types/todo-list';
-import { TodoListItem } from '@/types/todo-list-item';
+import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 import { EditTodoItemModal } from '../edit-item';
 import { EditableCell } from '../editable-cell';
@@ -82,6 +83,45 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setRefineList(_.tail(itemIdsToRefine));
   };
 
+  const handleExport = () => {
+    // export as json file
+    const filename = `${props.todoList.name}.json`;
+
+    const itemsToExport = todoListItemsQuery.data;
+
+    if (!itemsToExport) {
+      return;
+    }
+
+    const json = JSON.stringify(itemsToExport, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  };
+
+  const handleImport = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) {
+        return;
+      }
+
+      const text = await file.text();
+      const items = z.array(TodoListItemSchema).parse(JSON.parse(text));
+
+      await Promise.all(items.map((item) => todoListItemCreationMutation.mutateAsync(item)));
+    };
+
+    input.click();
+  };
+
   return (
     <div>
       <div className='d-flex p-2 gap-2'>
@@ -95,6 +135,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           disabled={!getRefinementList().length}
         >
           Refine list
+        </Button>
+
+        <Button onClick={handleExport} variant='outline-secondary'>
+          Export
+        </Button>
+
+        <Button onClick={handleImport} variant='outline-secondary'>
+          Import
         </Button>
       </div>
       <Table striped bordered hover className='m-0' responsive>
