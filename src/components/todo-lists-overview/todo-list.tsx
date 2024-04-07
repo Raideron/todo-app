@@ -180,6 +180,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
               </td>
 
               <td>
+                <Button variant='outline-primary' size='sm' className='ms-2' onClick={() => setOpenedItem(item)}>
+                  Edit
+                </Button>
                 <Button
                   variant='outline-danger'
                   size='sm'
