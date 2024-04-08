@@ -143,6 +143,19 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     input.click();
   };
 
+  const handleNextPrev = (delta: -1 | 1) => {
+    if (!openedItem) {
+      return;
+    }
+
+    const currentIndex = _.findIndex(sortedList, (item) => item.id === openedItem.id);
+    const nextItem = _.nth(sortedList, currentIndex + delta);
+
+    if (nextItem) {
+      setOpenedItem(nextItem);
+    }
+  };
+
   return (
     <div>
       <div className='d-flex p-2 gap-2 flex-wrap'>
@@ -302,6 +315,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         }
         onSave={handleModalSave}
         onClose={handleModalClose}
+        onNextPrev={handleNextPrev}
       />
     </div>
   );

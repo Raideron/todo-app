@@ -8,6 +8,7 @@ interface EditTodoItemModalProps {
   onChange: (item: Partial<TodoListItem>) => void;
   onSave: () => void;
   onClose: () => void;
+  onNextPrev: (delta: -1 | 1) => void;
 }
 
 export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
@@ -128,13 +129,24 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
         )}
       </Modal.Body>
 
-      <Modal.Footer>
-        <Button variant='secondary' onClick={props.onClose}>
-          Close
-        </Button>
-        <Button variant='primary' onClick={props.onSave}>
-          Save Changes
-        </Button>
+      <Modal.Footer className='d-flex justify-content-between'>
+        <ButtonGroup>
+          <Button variant={'outline-primary'} onClick={() => props.onNextPrev(-1)}>
+            Previous task
+          </Button>
+          <Button variant={'outline-primary'} onClick={() => props.onNextPrev(1)}>
+            Next task
+          </Button>
+        </ButtonGroup>
+
+        <ButtonGroup>
+          <Button variant='secondary' onClick={props.onClose}>
+            Discard
+          </Button>
+          <Button variant='primary' onClick={props.onSave}>
+            Save
+          </Button>
+        </ButtonGroup>
       </Modal.Footer>
     </Modal>
   );
