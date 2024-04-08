@@ -25,7 +25,6 @@ interface TodoListCompProps {
 export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [windowWidth] = useWindowSize();
   const minWidthForExtraColumns = 1000;
-  console.log('windowWidth', windowWidth);
 
   const todoListItemsQuery = useGetTodoListItems(props.todoList.id);
   const todoListItemMutation = useUpdateTodoListItem();
