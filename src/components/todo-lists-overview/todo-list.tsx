@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
-import { BsPlus, BsPlusLg } from 'react-icons/bs';
+import { BsPencil, BsPlus, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
 
 import { getPrioScore } from '@/get-prio-score';
@@ -234,18 +234,15 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
               </td>
 
-              <td>
-                <Button variant='outline-primary' size='sm' className='ms-2' onClick={() => setOpenedItem(item)}>
-                  Edit
-                </Button>
-                <Button
-                  variant='outline-danger'
-                  size='sm'
-                  className='ms-2'
-                  onClick={() => todoListItemDeletionMutation.mutate(item)}
-                >
-                  Delete
-                </Button>
+              <td width={10}>
+                <ButtonGroup>
+                  <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
+                    <BsPencil />
+                  </Button>
+                  <Button variant='outline-danger' size='sm' onClick={() => todoListItemDeletionMutation.mutate(item)}>
+                    <BsTrash />
+                  </Button>
+                </ButtonGroup>
               </td>
             </tr>
           ))}
