@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
-import { BsPencil, BsPlus, BsPlusLg, BsTrash } from 'react-icons/bs';
+import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
 
 import { getPrioScore } from '@/get-prio-score';
@@ -164,7 +164,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           </Button>
         </ButtonGroup>
       </div>
-      <Table striped bordered hover className='m-0' responsive>
+      <Table striped borderless hover className='m-0' responsive>
         <thead onClick={() => setEditingCell(null)}>
           <tr>
             <th />
