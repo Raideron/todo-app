@@ -82,20 +82,20 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
             </Col>
 
             <Col xs={6} className='mb-2'>
-              <Form.Label htmlFor='deadline'>Deadline</Form.Label>
-              <Form.Control
-                id='deadline'
-                value={props.localItem.deadline?.toISOString().split('T')[0] ?? ''}
-                onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
-                type='date'
-              />
-            </Col>
-            <Col xs={6} className='mb-2'>
               <Form.Label htmlFor='startDate'>Start Date</Form.Label>
               <Form.Control
                 id='startDate'
                 value={props.localItem.startDate?.toISOString().split('T')[0] ?? ''}
                 onChange={(e) => props.onChange({ startDate: new Date(e.target.value) })}
+                type='date'
+              />
+            </Col>
+            <Col xs={6} className='mb-2'>
+              <Form.Label htmlFor='deadline'>Deadline</Form.Label>
+              <Form.Control
+                id='deadline'
+                value={props.localItem.deadline?.toISOString().split('T')[0] ?? ''}
+                onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
                 type='date'
               />
             </Col>
