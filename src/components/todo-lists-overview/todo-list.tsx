@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
+import { BsPlus, BsPlusLg } from 'react-icons/bs';
 import { z } from 'zod';
 
 import { getPrioScore } from '@/get-prio-score';
@@ -26,11 +27,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItemCreationMutation = useCreateTodoListItem();
   const todoListItemDeletionMutation = useDeleteTodoListItem();
 
+  const [searchText, setSearchText] = useState('');
   const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
   const [refineList, setRefineList] = useState<string[]>([]);
 
-  const sortedListWithEmptyRow: TodoListItem[] = _.orderBy(todoListItemsQuery.data, getPrioScore, 'desc');
+  const filteredList =
+    todoListItemsQuery.data?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase())) ?? [];
+  const sortedList: TodoListItem[] = _.orderBy(filteredList, getPrioScore, 'desc');
 
   const handleCreateTodoListItem = async () => {
     const newTodoListItem: TodoListItem = {
@@ -128,23 +132,32 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   return (
     <div>
       <div className='d-flex p-2 gap-2'>
-        <Button onClick={handleCreateTodoListItem} variant='primary'>
-          Add new item
+        <Button onClick={handleCreateTodoListItem} variant='primary' className='d-flex text-nowrap align-items-center'>
+          <BsPlusLg className='me-1' />
+          New task
         </Button>
 
         <Button
           onClick={startRefining}
           variant={getRefinementList().length ? 'outline-primary' : 'outline-secondary'}
           disabled={!getRefinementList().length}
+          className='text-nowrap'
         >
           Refine list
         </Button>
 
-        <ButtonGroup>
-          <Button onClick={handleExport} variant='outline-secondary'>
+        <Form.Control
+          type='search'
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder='Search'
+        />
+
+        <ButtonGroup className='d-flex justify-content-end'>
+          <Button onClick={handleExport} variant='outline-secondary' className='text-nowrap'>
             Export list
           </Button>
-          <Button onClick={handleImport} variant='outline-secondary'>
+          <Button onClick={handleImport} variant='outline-secondary' className='text-nowrap'>
             Import list
           </Button>
         </ButtonGroup>
@@ -163,7 +176,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         </thead>
 
         <tbody>
-          {sortedListWithEmptyRow.map((item) => (
+          {sortedList.map((item) => (
             <tr key={item.id}>
               <td>
                 <div className='d-flex align-items-center h-100'>

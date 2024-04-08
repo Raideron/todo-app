@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Head from 'next/head';
-import Link from 'next/link';
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
 
 import AuthWrapper, { usePbAuth } from '@/contexts/auth-context';
@@ -42,12 +41,6 @@ const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ children }
       </Head>
       <Navbar>
         <Container>
-          <Navbar.Brand>
-            <Link href='/'>Home</Link>
-          </Navbar.Brand>
-
-          <Navbar.Collapse className='gap-3' />
-
           <Navbar.Collapse className='justify-content-end'>
             {auth.user && (
               <>
