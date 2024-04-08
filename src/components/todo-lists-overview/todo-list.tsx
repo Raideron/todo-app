@@ -131,7 +131,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   return (
     <div>
-      <div className='d-flex p-2 gap-2'>
+      <div className='d-flex p-2 gap-2 flex-wrap'>
         <Button onClick={handleCreateTodoListItem} variant='primary' className='d-flex text-nowrap align-items-center'>
           <BsPlusLg className='me-1' />
           New task
@@ -147,13 +147,15 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         </Button>
 
         <Form.Control
+          className='d-flex'
+          style={{ width: 'auto' }}
           type='search'
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           placeholder='Search'
         />
 
-        <ButtonGroup className='d-flex justify-content-end'>
+        <ButtonGroup className='d-flex'>
           <Button onClick={handleExport} variant='outline-secondary' className='text-nowrap'>
             Export list
           </Button>
