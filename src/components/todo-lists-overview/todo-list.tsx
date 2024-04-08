@@ -141,11 +141,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         </Button>
 
         <Button onClick={handleExport} variant='outline-secondary'>
-          Export
+          Export list
         </Button>
 
         <Button onClick={handleImport} variant='outline-secondary'>
-          Import
+          Import list
         </Button>
       </div>
       <Table striped bordered hover className='m-0' responsive>
