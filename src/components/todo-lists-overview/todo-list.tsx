@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { z } from 'zod';
 
 import { getPrioScore } from '@/get-prio-score';
@@ -140,13 +140,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           Refine list
         </Button>
 
-        <Button onClick={handleExport} variant='outline-secondary'>
-          Export list
-        </Button>
-
-        <Button onClick={handleImport} variant='outline-secondary'>
-          Import list
-        </Button>
+        <ButtonGroup>
+          <Button onClick={handleExport} variant='outline-secondary'>
+            Export list
+          </Button>
+          <Button onClick={handleImport} variant='outline-secondary'>
+            Import list
+          </Button>
+        </ButtonGroup>
       </div>
       <Table striped bordered hover className='m-0' responsive>
         <thead onClick={() => setEditingCell(null)}>
