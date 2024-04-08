@@ -199,8 +199,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             <th>Name</th>
             {windowWidth > minWidthForExtraColumns && (
               <>
-                <th>Estimate</th>
                 <th>Impact</th>
+                <th>Estimate</th>
                 <th>Deadline</th>
                 <th>Prio Score</th>
               </>
@@ -237,22 +237,22 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
               {windowWidth > minWidthForExtraColumns && (
                 <>
                   <EditableCell
-                    value={item.estimate || null}
+                    value={item.impact || null}
                     type='number'
-                    onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
-                    isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
-                    onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
+                    onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
+                    isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
+                    onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
                     onEnter={() => setEditingCell(null)}
                     isComplete={item.isCompleted}
                     width={'5em'}
                   />
 
                   <EditableCell
-                    value={item.impact || null}
+                    value={item.estimate || null}
                     type='number'
-                    onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
-                    isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
-                    onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
+                    onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
+                    isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
+                    onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
                     onEnter={() => setEditingCell(null)}
                     isComplete={item.isCompleted}
                     width={'5em'}
