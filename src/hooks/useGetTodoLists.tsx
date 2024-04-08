@@ -16,6 +16,7 @@ export const useGetTodoLists = () => {
       const lists = result.map<TodoList>((list) => TodoListSchema.parse(list));
       return lists;
     },
+    refetchInterval: 1000 * 60 * 5,
   });
 
   return findingQuery;

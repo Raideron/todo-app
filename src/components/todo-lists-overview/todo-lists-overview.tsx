@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
 import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useGetTodoLists } from '@/hooks/useGetTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
+import { TodoList } from '@/types/todo-list';
 
 import { TodoListComp } from './todo-list';
 
@@ -16,21 +17,18 @@ export const TodoListsOverview: React.FC = () => {
   const updateTodoListMutation = useUpdateTodoList();
 
   const [isEditingName, setIsEditingName] = useState(false);
-  const [openedListId, setOpenedListId] = useState<string | null>(null);
-  const openedList = todoListsQuery.data?.find((list) => list.id === openedListId);
-
-  useEffect(() => {
-    const firstList = _.first(todoListsQuery.data);
-    if (firstList) {
-      setOpenedListId(firstList.id);
-    }
-  }, [todoListsQuery.data]);
+  const orderedTodoLists = _.orderBy(todoListsQuery.data, (x) => x.last_opened ?? x.updated, 'desc');
+  const openedList = _.first(orderedTodoLists);
 
   useEffect(() => {
     if (todoListsQuery.data?.length === 0) {
       createTodoListMutation.mutate();
     }
   }, [todoListsQuery.data]);
+
+  const setOpenedList = (list: TodoList) => {
+    updateTodoListMutation.mutate({ ...list, last_opened: new Date() });
+  };
 
   if (!openedList) {
     return null;
@@ -61,7 +59,7 @@ export const TodoListsOverview: React.FC = () => {
 
           <Dropdown.Menu>
             {todoListsQuery.data?.map((list) => (
-              <Dropdown.Item key={list.id} onClick={() => setOpenedListId(list.id)}>
+              <Dropdown.Item key={list.id} onClick={() => setOpenedList(list)}>
                 {list.name}
               </Dropdown.Item>
             ))}

@@ -17,8 +17,19 @@ export const useUpdateTodoList = () => {
         queryKey: GET_TODO_LISTS(),
       });
     },
-    onMutate: async () => {
+    onMutate: async (updatedTodoList) => {
       queryClient.cancelQueries({ queryKey: GET_TODO_LISTS() });
+
+      // Optimistically update to the new value
+      queryClient.setQueryData<TodoList[]>(GET_TODO_LISTS(), (oldItems) =>
+        oldItems?.map((item) => {
+          if (item.id === updatedTodoList.id) {
+            return updatedTodoList;
+          }
+
+          return item;
+        }),
+      );
     },
   });
 

@@ -17,16 +17,16 @@ export const useUpdateTodoListItem = () => {
         queryKey: GET_TODO_LIST_ITEMS(input.todo_list_id),
       });
     },
-    onMutate: async (updatedFinding) => {
+    onMutate: async (updatedTodoListItem) => {
       // Cancel any outgoing refetches
       // (so they don't overwrite our optimistic update)
-      queryClient.cancelQueries({ queryKey: GET_TODO_LIST_ITEMS(updatedFinding.todo_list_id) });
+      queryClient.cancelQueries({ queryKey: GET_TODO_LIST_ITEMS(updatedTodoListItem.todo_list_id) });
 
       // Optimistically update to the new value
-      queryClient.setQueryData<TodoListItem[]>(GET_TODO_LIST_ITEMS(updatedFinding.todo_list_id), (oldItems) =>
+      queryClient.setQueryData<TodoListItem[]>(GET_TODO_LIST_ITEMS(updatedTodoListItem.todo_list_id), (oldItems) =>
         oldItems?.map((item) => {
-          if (item.id === updatedFinding.todo_list_id) {
-            return updatedFinding;
+          if (item.id === updatedTodoListItem.id) {
+            return updatedTodoListItem;
           }
 
           return item;
