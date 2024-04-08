@@ -11,6 +11,7 @@ interface EditableCellProps {
   subText?: string;
   isEditing: boolean;
   isComplete: boolean;
+  width?: string | number;
   onChange: (value: string) => void;
   onClick: () => void;
   onEnter: () => void;
@@ -62,7 +63,7 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
   };
 
   return (
-    <td onClick={props.onClick}>
+    <td onClick={props.onClick} style={{ width: props.width, maxWidth: '20em' }}>
       {isEditing ? (
         <Form.Control
           autoFocus
@@ -86,7 +87,6 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
               textOverflow: 'ellipsis',
               overflow: 'hidden',
               whiteSpace: 'nowrap',
-              maxWidth: '12em',
             }}
           >
             {props.subText}

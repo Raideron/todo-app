@@ -178,7 +178,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         <tbody>
           {sortedList.map((item) => (
             <tr key={item.id}>
-              <td>
+              <td style={{ width: 1 }}>
                 <div className='d-flex align-items-center h-100'>
                   <Form.Check
                     className='d-inline-block'
@@ -208,6 +208,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
                 onEnter={() => setEditingCell(null)}
                 isComplete={item.isCompleted}
+                width={'5em'}
               />
 
               <EditableCell
@@ -218,6 +219,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
                 onEnter={() => setEditingCell(null)}
                 isComplete={item.isCompleted}
+                width={'5em'}
               />
 
               <EditableCell
@@ -228,13 +230,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 onClick={() => setEditingCell({ id: item.id, field: 'deadline' })}
                 onEnter={() => setEditingCell(null)}
                 isComplete={item.isCompleted}
+                width={'12em'}
               />
 
-              <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined }}>
+              <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined, width: '6em' }}>
                 {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
               </td>
 
-              <td width={10}>
+              <td style={{ width: 1 }}>
                 <ButtonGroup>
                   <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
                     <BsPencil />
