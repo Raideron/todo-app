@@ -7,6 +7,7 @@ import { Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
 
+import { getEstimateDisplayValue } from '@/estimate-display-value';
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
@@ -261,7 +262,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                   />
 
                   <EditableCell
-                    value={item.estimate || null}
+                    value={
+                      editingCell?.id === item.id && editingCell.field === 'estimate'
+                        ? item.estimate
+                        : getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')
+                    }
                     type='number'
                     onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
                     isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}

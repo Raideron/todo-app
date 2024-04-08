@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 
+import { getEstimateConvertedNumber } from '@/estimate-display-value';
 import { TodoListItem } from '@/types/todo-list-item';
 
 interface EstimateInputProps {
@@ -36,16 +37,12 @@ export const EstimateInput: React.FC<EstimateInputProps> = (props) => {
     }
   };
 
-  const getEstimateDisplayValue = (): number => {
+  const getEstimateDisplayValue = (): string => {
     if (!props.localItem) {
-      return 0;
+      return '';
     }
 
-    if (estimateUnit === 'm') {
-      return props.localItem.estimate * 60;
-    }
-
-    return props.localItem.estimate;
+    return `${getEstimateConvertedNumber(props.localItem.estimate, estimateUnit)}`;
   };
 
   const handleEstimateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
