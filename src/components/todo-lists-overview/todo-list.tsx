@@ -91,6 +91,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setRefineList(_.tail(itemIdsToRefine));
   };
 
+  const deleteCompletedTasks = async () => {
+    const completedTasks = todoListItemsQuery.data?.filter((item) => item.isCompleted) ?? [];
+    await Promise.all(completedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
+  };
+
   const handleExport = () => {
     // export as json file
     const filename = `${props.todoList.name}.json`;
@@ -158,6 +163,15 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           onChange={(e) => setSearchText(e.target.value)}
           placeholder='Search'
         />
+
+        <Button
+          variant='outline-danger'
+          className='d-flex align-items-center text-nowrap'
+          onClick={deleteCompletedTasks}
+        >
+          <BsTrash className='me-1' />
+          Delete all completed tasks
+        </Button>
 
         <ButtonGroup className='d-flex'>
           <Button onClick={handleExport} variant='outline-secondary' className='text-nowrap'>
