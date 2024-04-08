@@ -35,7 +35,7 @@ export const TodoListsOverview: React.FC = () => {
   }
 
   return (
-    <Card>
+    <Card className='mb-5'>
       <CardHeader className='d-flex align-items-center'>
         {isEditingName ? (
           <Form.Control
