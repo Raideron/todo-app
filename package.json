@@ -15,6 +15,7 @@
     "pi:deploy:pb": "npm run git:update && chmod +x ./pocketbase-armv7l && ./pocketbase-armv7l serve --http \"0.0.0.0:8090\""
   },
   "dependencies": {
+    "@react-hook/window-size": "^3.1.1",
     "@tanstack/react-query": "^5.28.9",
     "bootstrap": "^5.3.3",
     "classnames": "^2.5.1",

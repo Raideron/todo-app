@@ -1,5 +1,6 @@
 'use client';
 
+import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
@@ -22,6 +23,10 @@ interface TodoListCompProps {
 }
 
 export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
+  const [windowWidth] = useWindowSize();
+  const minWidthForExtraColumns = 1000;
+  console.log('windowWidth', windowWidth);
+
   const todoListItemsQuery = useGetTodoListItems(props.todoList.id);
   const todoListItemMutation = useUpdateTodoListItem();
   const todoListItemCreationMutation = useCreateTodoListItem();
@@ -169,10 +174,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           <tr>
             <th />
             <th>Name</th>
-            <th>Estimate</th>
-            <th>Impact</th>
-            <th>Deadline</th>
-            <th>Prio Score</th>
+            {windowWidth > minWidthForExtraColumns && (
+              <>
+                <th>Estimate</th>
+                <th>Impact</th>
+                <th>Deadline</th>
+                <th>Prio Score</th>
+              </>
+            )}
             <th />
           </tr>
         </thead>
@@ -202,42 +211,46 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 subText={item.description}
               />
 
-              <EditableCell
-                value={item.estimate || null}
-                type='number'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
-                onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
-                width={'5em'}
-              />
+              {windowWidth > minWidthForExtraColumns && (
+                <>
+                  <EditableCell
+                    value={item.estimate || null}
+                    type='number'
+                    onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
+                    isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
+                    onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
+                    onEnter={() => setEditingCell(null)}
+                    isComplete={item.isCompleted}
+                    width={'5em'}
+                  />
 
-              <EditableCell
-                value={item.impact || null}
-                type='number'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
-                onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
-                width={'5em'}
-              />
+                  <EditableCell
+                    value={item.impact || null}
+                    type='number'
+                    onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
+                    isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
+                    onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
+                    onEnter={() => setEditingCell(null)}
+                    isComplete={item.isCompleted}
+                    width={'5em'}
+                  />
 
-              <EditableCell
-                value={item.deadline ?? null}
-                type='date'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'deadline'}
-                onClick={() => setEditingCell({ id: item.id, field: 'deadline' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
-                width={'12em'}
-              />
+                  <EditableCell
+                    value={item.deadline ?? null}
+                    type='date'
+                    onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
+                    isEditing={editingCell?.id === item.id && editingCell.field === 'deadline'}
+                    onClick={() => setEditingCell({ id: item.id, field: 'deadline' })}
+                    onEnter={() => setEditingCell(null)}
+                    isComplete={item.isCompleted}
+                    width={'12em'}
+                  />
 
-              <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined, width: '6em' }}>
-                {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
-              </td>
+                  <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined, width: '6em' }}>
+                    {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
+                  </td>
+                </>
+              )}
 
               <td style={{ width: 1 }}>
                 <ButtonGroup>
