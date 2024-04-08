@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Button, ButtonGroup, Col, Form, FormLabel, InputGroup, Modal, Row } from 'react-bootstrap';
+import React from 'react';
+import { Button, ButtonGroup, Col, Form, FormLabel, Modal, Row } from 'react-bootstrap';
 
 import { TodoListItem } from '@/types/todo-list-item';
+
+import { EstimateInput } from './estimate-input';
 
 interface EditTodoItemModalProps {
   localItem: TodoListItem | null;
@@ -13,65 +15,6 @@ interface EditTodoItemModalProps {
 
 export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
   const showModal = !!props.localItem;
-  const [estimateUnit, _setEstimateUnit] = useState<'h' | 'm'>(
-    props.localItem && props.localItem.estimate >= 1 ? 'h' : 'm',
-  );
-
-  const setEstimateUnit = (unit: 'h' | 'm') => {
-    if (!props.localItem) {
-      return;
-    }
-
-    if (unit === estimateUnit) {
-      return;
-    }
-
-    _setEstimateUnit(unit);
-
-    if (unit === 'h') {
-      props.onChange({ estimate: props.localItem.estimate * 60 });
-    }
-
-    if (unit === 'm') {
-      props.onChange({ estimate: props.localItem.estimate / 60 });
-    }
-  };
-
-  const getEstimateDisplayValue = (): number => {
-    if (!props.localItem) {
-      return 0;
-    }
-
-    if (estimateUnit === 'm') {
-      return props.localItem.estimate * 60;
-    }
-
-    return props.localItem.estimate;
-  };
-
-  const handleEstimateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = +e.target.value;
-    const convertedValue = estimateUnit === 'm' ? rawValue / 60 : rawValue;
-    props.onChange({ estimate: convertedValue });
-  };
-
-  const handleEstimateKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'm') {
-      e.preventDefault();
-      setEstimateUnit('m');
-      return;
-    }
-
-    if (e.key === 'h') {
-      e.preventDefault();
-      setEstimateUnit('h');
-      return;
-    }
-  };
-
-  const handleEstimateUnitClick = () => {
-    setEstimateUnit(estimateUnit === 'h' ? 'm' : 'h');
-  };
 
   const handleEnter = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -132,19 +75,13 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               />
             </Col>
             <Col xs={6} className='mb-2'>
-              <Form.Label htmlFor='estimate'>Estimate</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  id='estimate'
-                  value={getEstimateDisplayValue()}
-                  onChange={handleEstimateChange}
-                  onKeyDown={handleEstimateKeyDown}
-                  type='number'
-                />
-                <Button variant={'outline-secondary'} onClick={handleEstimateUnitClick}>
-                  {estimateUnit}
-                </Button>
-              </InputGroup>
+              <EstimateInput
+                localItem={props.localItem}
+                onChange={props.onChange}
+                onSave={props.onSave}
+                onClose={props.onClose}
+                onNextPrev={props.onNextPrev}
+              />
             </Col>
 
             <Col xs={6} className='mb-2'>
