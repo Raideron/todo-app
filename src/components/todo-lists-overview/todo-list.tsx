@@ -3,7 +3,7 @@
 import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
+import { Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
 
@@ -153,6 +153,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           className='text-nowrap'
         >
           Refine list
+          {getRefinementList().length > 0 && (
+            <Badge bg='primary' className='ms-1' pill>
+              {getRefinementList().length}
+            </Badge>
+          )}
         </Button>
 
         <Form.Control
