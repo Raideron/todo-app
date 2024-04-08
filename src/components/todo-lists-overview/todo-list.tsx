@@ -15,7 +15,7 @@ import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
 import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
-import { EditTodoItemModal } from '../edit-item';
+import { EditTodoItemModal } from '../edit-item/edit-item';
 import { EditableCell } from '../editable-cell';
 
 interface TodoListCompProps {
