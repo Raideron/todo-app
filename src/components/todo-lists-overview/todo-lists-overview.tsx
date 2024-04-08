@@ -2,9 +2,10 @@
 
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
+import { Badge, Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
 
 import { useCreateTodoList } from '@/hooks/useCreateTodoList';
+import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useGetTodoLists } from '@/hooks/useGetTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types/todo-list';
@@ -19,6 +20,8 @@ export const TodoListsOverview: React.FC = () => {
   const [isEditingName, setIsEditingName] = useState(false);
   const orderedTodoLists = _.orderBy(todoListsQuery.data, (x) => x.last_opened ?? x.updated, 'desc');
   const openedList = _.first(orderedTodoLists);
+
+  const todoListItemsQuery = useGetTodoListItems(openedList?.id ?? '');
 
   useEffect(() => {
     if (todoListsQuery.data?.length === 0) {
@@ -49,10 +52,14 @@ export const TodoListsOverview: React.FC = () => {
             autoFocus
           />
         ) : (
-          <h3 className='d-inline-block me-3' onClick={() => setIsEditingName(true)}>
+          <h3 className='d-inline-block me-2 mb-1' onClick={() => setIsEditingName(true)}>
             {openedList.name}
           </h3>
         )}
+
+        <Badge bg='secondary' className='me-3 mb-0' pill style={{ fontSize: '1.25rem' }}>
+          {todoListItemsQuery.data?.filter((x) => !x.isCompleted).length}
+        </Badge>
 
         <Dropdown className='d-inline-block'>
           <Dropdown.Toggle variant='outline-secondary'>Select list</Dropdown.Toggle>
