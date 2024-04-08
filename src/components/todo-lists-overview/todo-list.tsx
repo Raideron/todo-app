@@ -38,7 +38,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase())) ?? [];
-  const sortedList: TodoListItem[] = _.orderBy(filteredList, getPrioScore, 'desc');
+  const sortedList: TodoListItem[] = _.orderBy(filteredList, [getPrioScore, (x) => x.name], ['desc', 'asc']);
 
   const handleCreateTodoListItem = async () => {
     const newTodoListItem: TodoListItem = {
