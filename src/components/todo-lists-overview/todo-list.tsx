@@ -74,6 +74,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
+  const handleModalClose = () => {
+    setOpenedItem(null);
+    setRefineList([]);
+  };
+
   const getRefinementList = () =>
     todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((item) => !item.estimate || !item.impact) ?? [];
 
@@ -295,8 +300,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             return { ...oldItem, ...partialItem };
           })
         }
-        onSave={() => handleModalSave()}
-        onClose={() => setOpenedItem(null)}
+        onSave={handleModalSave}
+        onClose={handleModalClose}
       />
     </div>
   );
