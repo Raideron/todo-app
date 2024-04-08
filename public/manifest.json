@@ -1,7 +1,13 @@
 {
 	"name": "Todo App",
 	"short_name": "Todo App",
-	"icons": [],
+	"icons": [
+		{
+		"src": "/icons/yes-check-icon.png",
+		"sizes": "640x640",
+		"type": "image/png"
+	  }
+	],
 	"theme_color": "#FFFFFF",
 	"background_color": "#FFFFFF",
 	"start_url": "/",
