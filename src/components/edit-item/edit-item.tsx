@@ -36,7 +36,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
   };
 
   return (
-    <Modal show={showModal} onHide={props.onClose}>
+    <Modal show={showModal} onHide={props.onClose} scrollable>
       <Modal.Header closeButton>
         <Modal.Title>Modal heading</Modal.Title>
       </Modal.Header>
