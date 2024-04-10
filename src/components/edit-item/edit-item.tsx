@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Col, Form, FormLabel, Modal, Row } from 'react-boo
 
 import { TodoListItem } from '@/types/todo-list-item';
 
+import { SnoozeBtn } from '../snooze-btn';
 import { EstimateInput } from './estimate-input';
 
 interface EditTodoItemModalProps {
@@ -20,19 +21,6 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
     if (e.key === 'Enter') {
       props.onSave();
     }
-  };
-
-  const handleSnooze = async (timeInMinutes: number) => {
-    if (!props.localItem) {
-      return;
-    }
-
-    if (props.localItem.startDate && props.localItem.startDate > new Date()) {
-      return;
-    }
-
-    const newStartDate = new Date(Date.now() + timeInMinutes * 60 * 1000);
-    props.onChange({ startDate: newStartDate });
   };
 
   return (
@@ -115,18 +103,10 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
             </Col>
 
             <Col xs={12} className='mb-2'>
-              <Form.Label>Snooze</Form.Label>
-              <ButtonGroup className='d-block'>
-                <Button variant='outline-warning' onClick={() => handleSnooze(10)}>
-                  10 minutes
-                </Button>
-                <Button variant='outline-warning' onClick={() => handleSnooze(60)}>
-                  1 hour
-                </Button>
-                <Button variant='outline-warning' onClick={() => handleSnooze(60 * 24)}>
-                  1 day
-                </Button>
-              </ButtonGroup>
+              <SnoozeBtn
+                task={props.localItem}
+                onSnooze={(newStartDate) => props.onChange({ startDate: newStartDate })}
+              />
             </Col>
           </Row>
         )}
