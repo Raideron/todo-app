@@ -142,14 +142,9 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
           </Button>
         </ButtonGroup>
 
-        <ButtonGroup>
-          <Button variant='secondary' onClick={props.onClose}>
-            Discard
-          </Button>
-          <Button variant='primary' onClick={props.onSave}>
-            Save
-          </Button>
-        </ButtonGroup>
+        <Button variant='primary' onClick={props.onSave}>
+          Save
+        </Button>
       </Modal.Footer>
     </Modal>
   );
