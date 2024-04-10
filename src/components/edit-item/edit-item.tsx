@@ -117,7 +117,8 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               />
             </Col>
 
-            <Col xs={12} className='mb-2'>
+            <Col xs={6} className='mb-2'>
+              <Form.Label className='d-block'>Snooze</Form.Label>
               <SnoozeBtn
                 task={props.localItem}
                 onSnooze={(newStartDate) => props.onChange({ startDate: newStartDate })}
