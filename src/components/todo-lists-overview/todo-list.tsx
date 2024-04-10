@@ -38,7 +38,19 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [refineList, setRefineList] = useState<string[]>([]);
 
   const filteredList =
-    todoListItemsQuery.data?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase())) ?? [];
+    todoListItemsQuery.data?.filter((item) => {
+      const matchesName = item.name.toLowerCase().includes(searchText.toLowerCase());
+      if (matchesName) {
+        return true;
+      }
+
+      const matchesDescription = item.description?.toLowerCase().includes(searchText.toLowerCase()) ?? false;
+      if (matchesDescription) {
+        return true;
+      }
+
+      return false;
+    }) ?? [];
   const sortedList: TodoListItem[] = _.orderBy(filteredList, [getPrioScore, (x) => x.name], ['desc', 'asc']);
 
   const handleCreateTodoListItem = async () => {
