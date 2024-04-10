@@ -73,7 +73,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setOpenedItem(newTodoListItem);
   };
 
-  const handleModalSave = async () => {
+  const handleModalSaveBtn = async () => {
     if (!openedItem) {
       return;
     }
@@ -159,6 +159,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     if (!openedItem) {
       return;
     }
+
+    todoListItemMutation.mutateAsync(openedItem);
 
     const currentIndex = _.findIndex(sortedList, (item) => item.id === openedItem.id);
     const nextItem = _.nth(sortedList, currentIndex + delta);
@@ -329,8 +331,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
             return { ...oldItem, ...partialItem };
           })
         }
-        onSave={handleModalSave}
-        onClose={handleModalSave}
+        onSave={handleModalSaveBtn}
+        onClose={handleModalSaveBtn}
         onNextPrev={handleNextPrev}
       />
     </div>
