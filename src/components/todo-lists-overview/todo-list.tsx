@@ -2,7 +2,7 @@
 
 import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
@@ -52,6 +52,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       return false;
     }) ?? [];
   const sortedList: TodoListItem[] = _.orderBy(filteredList, [getPrioScore, (x) => x.name], ['desc', 'asc']);
+
+  useEffect(() => {
+    setSearchText('');
+  }, [props.todoList.id]);
 
   const handleCreateTodoListItem = async () => {
     const newTodoListItem: TodoListItem = {
