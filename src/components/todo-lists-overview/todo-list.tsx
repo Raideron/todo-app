@@ -2,7 +2,7 @@
 
 import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
 import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
@@ -13,6 +13,7 @@ import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useUpdateTodoListItem } from '@/hooks/useUpdateTodoListItem';
+import { isTaskRefined } from '@/item-helper';
 import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
@@ -38,6 +39,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
   const [refineList, setRefineList] = useState<string[]>([]);
 
+  const questStartSoundRef = useRef<HTMLAudioElement>(null);
+  const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
+
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
       const matchesName = item.name.toLowerCase().includes(searchText.toLowerCase());
@@ -58,19 +62,19 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setSearchText('');
   }, [props.todoList.id]);
 
-  const handleCreateTodoListItem = async () => {
-    const newTodoListItem: TodoListItem = {
-      id: '',
-      created: new Date(),
-      updated: new Date(),
-      name: '',
-      todo_list_id: props.todoList.id,
-      isCompleted: false,
-      estimate: 0,
-      impact: 0,
-      confidence: 0,
-    };
+  const newTodoListItem: TodoListItem = {
+    id: '',
+    created: new Date(),
+    updated: new Date(),
+    name: '',
+    todo_list_id: props.todoList.id,
+    isCompleted: false,
+    estimate: 0,
+    impact: 0,
+    confidence: 0,
+  };
 
+  const handleCreateTodoListItem = async () => {
     setOpenedItem(newTodoListItem);
   };
 
@@ -78,6 +82,16 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     if (!openedItem) {
       return;
     }
+
+    const newI = newTodoListItem;
+    newI.created = openedItem.created;
+    newI.updated = openedItem.updated;
+    if (_.isEqual(openedItem, newI)) {
+      setOpenedItem(null);
+      return;
+    }
+
+    startQuest();
 
     if (!openedItem.id) {
       await todoListItemCreationMutation.mutateAsync(openedItem);
@@ -92,8 +106,30 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
+  /** Plays a sound when refining a new task */
+  const startQuest = () => {
+    const newItem = openedItem;
+    const oldItem = todoListItemsQuery.data?.find((item) => item.id === newItem?.id) ?? undefined;
+
+    if (!newItem) {
+      return;
+    }
+
+    const isNewTask = !newItem.id;
+    const isTaskNewlyRefined = !!oldItem && !isTaskRefined(oldItem) && isTaskRefined(newItem);
+
+    if (isNewTask || isTaskNewlyRefined) {
+      questStartSoundRef.current?.play();
+    }
+  };
+
+  /** Plays a sound when a task is completed */
+  const completeQuest = () => {
+    questCompleteSoundRef.current?.play();
+  };
+
   const getRefinementList = () =>
-    todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((item) => !item.estimate || !item.impact) ?? [];
+    todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((x) => !isTaskRefined(x)) ?? [];
 
   const startRefining = () => {
     const itemsToRefine = getRefinementList();
@@ -173,6 +209,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   return (
     <div>
+      <audio ref={questStartSoundRef} preload='auto' src='/sounds/iQuestActivate.mp3' />
+      <audio ref={questCompleteSoundRef} preload='auto' src='/sounds/iQuestComplete.mp3' />
+
       <div className='d-flex p-2 gap-2 flex-wrap'>
         <Button onClick={handleCreateTodoListItem} variant='primary' className='d-flex text-nowrap align-items-center'>
           <BsPlusLg className='me-1' />
@@ -246,7 +285,13 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                     className='d-inline-block'
                     type='checkbox'
                     checked={item.isCompleted}
-                    onChange={(e) => todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked })}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        completeQuest();
+                      }
+
+                      return todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked });
+                    }}
                   />
                 </div>
               </td>
