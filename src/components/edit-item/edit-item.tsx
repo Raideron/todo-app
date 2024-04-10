@@ -60,6 +60,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
                 id='description'
                 value={props.localItem.description}
                 onChange={(e) => props.onChange({ description: e.target.value })}
+                onKeyDown={(e) => e.stopPropagation()}
                 as='textarea'
                 rows={3}
               />
