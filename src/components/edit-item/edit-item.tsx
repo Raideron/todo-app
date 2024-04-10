@@ -17,6 +17,21 @@ interface EditTodoItemModalProps {
 export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
   const showModal = !!props.localItem;
 
+  /** Returns string in format "yyyy-MM-ddThh:mm" */
+  const getDatetimeLocalString = (date: Date | undefined): string => {
+    if (!date) {
+      return '';
+    }
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const handleEnter = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       props.onSave();
@@ -77,18 +92,18 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Label htmlFor='startDate'>Start Date</Form.Label>
               <Form.Control
                 id='startDate'
-                value={props.localItem.startDate?.toISOString().split('T')[0] ?? ''}
+                value={getDatetimeLocalString(props.localItem.startDate)}
                 onChange={(e) => props.onChange({ startDate: new Date(e.target.value) })}
-                type='date'
+                type='datetime-local'
               />
             </Col>
             <Col xs={6} className='mb-2'>
               <Form.Label htmlFor='deadline'>Deadline</Form.Label>
               <Form.Control
                 id='deadline'
-                value={props.localItem.deadline?.toISOString().split('T')[0] ?? ''}
+                value={getDatetimeLocalString(props.localItem.deadline)}
                 onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
-                type='date'
+                type='datetime-local'
               />
             </Col>
 
