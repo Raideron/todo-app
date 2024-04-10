@@ -36,7 +36,7 @@ export const SnoozeBtn: React.FC<SnoozeBtnProps> = (props) => {
   };
 
   return (
-    <DropdownButton as={ButtonGroup} variant='primary' title={'Snooze'}>
+    <DropdownButton as={ButtonGroup} variant='outline-primary' title={'Snooze'}>
       <Dropdown.Item onClick={() => snoozeForDuration(10)}>10 minutes</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeForDuration(60)}>1 hour</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeForDuration(60 * 24)}>1 day</Dropdown.Item>

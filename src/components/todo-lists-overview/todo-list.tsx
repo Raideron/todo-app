@@ -18,6 +18,7 @@ import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 import { EditTodoItemModal } from '../edit-item/edit-item';
 import { EditableCell } from '../editable-cell';
+import { SnoozeBtn } from '../snooze-btn';
 
 interface TodoListCompProps {
   todoList: TodoList;
@@ -308,6 +309,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
               <td style={{ width: 1 }}>
                 <ButtonGroup>
+                  <SnoozeBtn
+                    task={item}
+                    onSnooze={(newStartDate) => todoListItemMutation.mutate({ ...item, startDate: newStartDate })}
+                  />
                   <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
                     <BsPencil />
                   </Button>
