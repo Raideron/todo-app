@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Badge, Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
+import { Badge, Button, ButtonGroup, Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
 
 import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
@@ -38,6 +38,9 @@ export const TodoListsOverview: React.FC = () => {
     return null;
   }
 
+  const sortedLists = _.orderBy(todoListsQuery.data, (x) => x.last_opened ?? x.updated, 'desc');
+  const previousList = _.get(sortedLists, 1);
+
   const isTaskSnoozed = (task: TodoListItem) => task.startDate && task.startDate > new Date();
   const todoCount = todoListItemsQuery.data?.filter((x) => !x.isCompleted && !isTaskSnoozed(x)).length;
   const snoozeCount = todoListItemsQuery.data?.filter((x) => !x.isCompleted && isTaskSnoozed(x)).length;
@@ -67,11 +70,15 @@ export const TodoListsOverview: React.FC = () => {
           {`${todoCount} / ${snoozeCount} / ${completedCount}`}
         </Badge>
 
-        <Dropdown className='d-inline-block'>
-          <Dropdown.Toggle variant='outline-secondary'>Select list</Dropdown.Toggle>
+        <Dropdown className='d-inline-block' as={ButtonGroup}>
+          <Button variant='outline-secondary' onClick={() => setOpenedList(previousList)}>
+            Switch list
+          </Button>
+
+          <Dropdown.Toggle split variant='outline-secondary' />
 
           <Dropdown.Menu>
-            {todoListsQuery.data?.map((list) => (
+            {sortedLists.map((list) => (
               <Dropdown.Item key={list.id} onClick={() => setOpenedList(list)}>
                 {list.name}
               </Dropdown.Item>
