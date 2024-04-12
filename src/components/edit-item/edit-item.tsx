@@ -80,6 +80,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
             </Col>
             <Col xs={6} className='mb-2'>
               <EstimateInput
+                key={props.localItem.id} // Fixes a bug with unit switch not working after switching task
                 localItem={props.localItem}
                 onChange={props.onChange}
                 onSave={props.onSave}
