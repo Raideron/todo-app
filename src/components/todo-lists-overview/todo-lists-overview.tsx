@@ -9,6 +9,7 @@ import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { useGetTodoLists } from '@/hooks/useGetTodoLists';
 import { useUpdateTodoList } from '@/hooks/useUpdateTodoList';
 import { TodoList } from '@/types/todo-list';
+import { TodoListItem } from '@/types/todo-list-item';
 
 import { TodoListComp } from './todo-list';
 
@@ -37,6 +38,11 @@ export const TodoListsOverview: React.FC = () => {
     return null;
   }
 
+  const isTaskSnoozed = (task: TodoListItem) => task.startDate && task.startDate > new Date();
+  const todoCount = todoListItemsQuery.data?.filter((x) => !x.isCompleted && !isTaskSnoozed(x)).length;
+  const snoozeCount = todoListItemsQuery.data?.filter((x) => !x.isCompleted && isTaskSnoozed(x)).length;
+  const completedCount = todoListItemsQuery.data?.filter((x) => x.isCompleted).length;
+
   return (
     <Card className='mb-5'>
       <CardHeader className='d-flex align-items-center'>
@@ -58,7 +64,7 @@ export const TodoListsOverview: React.FC = () => {
         )}
 
         <Badge bg='secondary' className='me-3 mb-0' pill style={{ fontSize: '1.25rem' }}>
-          {todoListItemsQuery.data?.filter((x) => !x.isCompleted).length}
+          {`${todoCount} / ${snoozeCount} / ${completedCount}`}
         </Badge>
 
         <Dropdown className='d-inline-block'>
