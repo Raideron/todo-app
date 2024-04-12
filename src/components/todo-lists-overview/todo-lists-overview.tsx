@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, ButtonGroup, Card, CardBody, CardHeader, Dropdown, Form } from 'react-bootstrap';
+import { Badge, Button, ButtonGroup, Card, CardBody, CardHeader, Col, Dropdown, Form, Row } from 'react-bootstrap';
 
 import { useCreateTodoList } from '@/hooks/useCreateTodoList';
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
@@ -49,44 +49,56 @@ export const TodoListsOverview: React.FC = () => {
   return (
     <Card className='mb-5'>
       <CardHeader className='d-flex align-items-center'>
-        {isEditingName ? (
-          <Form.Control
-            value={openedList.name}
-            onChange={(e) => updateTodoListMutation.mutate({ ...openedList, name: e.target.value })}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setIsEditingName(false);
-              }
-            }}
-            autoFocus
-          />
-        ) : (
-          <h3 className='d-inline-block me-2 mb-1' onClick={() => setIsEditingName(true)}>
-            {openedList.name}
-          </h3>
-        )}
+        <Row className='gap-2'>
+          <Col sm={'auto'} xs={6}>
+            <Row className='g-0'>
+              <Col xs='auto'>
+                {isEditingName ? (
+                  <Form.Control
+                    value={openedList.name}
+                    onChange={(e) => updateTodoListMutation.mutate({ ...openedList, name: e.target.value })}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setIsEditingName(false);
+                      }
+                    }}
+                    autoFocus
+                  />
+                ) : (
+                  <h3 className='d-inline-block me-2 mb-1' onClick={() => setIsEditingName(true)}>
+                    {openedList.name}
+                  </h3>
+                )}
+              </Col>
 
-        <Badge bg='secondary' className='me-3 mb-0' pill style={{ fontSize: '1.25rem' }}>
-          {`${todoCount} / ${snoozeCount} / ${completedCount}`}
-        </Badge>
+              <Col xs='auto'>
+                <Badge bg='secondary' className='me-3 mb-0' pill style={{ fontSize: '1.25rem' }}>
+                  {`${todoCount} / ${snoozeCount} / ${completedCount}`}
+                </Badge>
+              </Col>
+            </Row>
+          </Col>
 
-        <Dropdown className='d-inline-block' as={ButtonGroup}>
-          <Button variant='outline-secondary' onClick={() => setOpenedList(previousList)}>
-            Switch list
-          </Button>
+          <Col sm={'auto'} xs={'auto'}>
+            <Dropdown className='d-inline-block' as={ButtonGroup}>
+              <Button variant='outline-secondary' onClick={() => setOpenedList(previousList)}>
+                Switch list
+              </Button>
 
-          <Dropdown.Toggle split variant='outline-secondary' />
+              <Dropdown.Toggle split variant='outline-secondary' />
 
-          <Dropdown.Menu>
-            {sortedLists.map((list) => (
-              <Dropdown.Item key={list.id} onClick={() => setOpenedList(list)}>
-                {list.name}
-              </Dropdown.Item>
-            ))}
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={() => createTodoListMutation.mutate()}>Create new list</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+              <Dropdown.Menu>
+                {sortedLists.map((list) => (
+                  <Dropdown.Item key={list.id} onClick={() => setOpenedList(list)}>
+                    {list.name}
+                  </Dropdown.Item>
+                ))}
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={() => createTodoListMutation.mutate()}>Create new list</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+        </Row>
       </CardHeader>
 
       <CardBody className='p-0'>
