@@ -26,7 +26,7 @@ export const SnoozeBtn: React.FC<SnoozeBtnProps> = (props) => {
 
   const snoozeTillNextMonday = () => {
     const date = new Date();
-    date.setDate(date.getDate() + ((2 + 7 - date.getDay()) % 7));
+    date.setDate(date.getDate() + ((1 + 7 - date.getDay()) % 7));
     date.setHours(0);
     date.setMinutes(0);
     date.setSeconds(0);
