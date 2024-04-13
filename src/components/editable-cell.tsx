@@ -5,6 +5,8 @@ import { Form } from 'react-bootstrap';
 
 import { getDaysRemaining } from '@/get-prio-score';
 
+import { TextWithLinks } from './text-with-links';
+
 interface EditableCellProps {
   value: string | number | Date | null;
   type: 'text' | 'number' | 'date';
@@ -88,8 +90,9 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
               overflow: 'hidden',
               whiteSpace: 'nowrap',
             }}
+            onClick={(e) => e.stopPropagation()}
           >
-            {props.subText}
+            <TextWithLinks text={props.subText ?? ''} />
           </span>
         </>
       )}
