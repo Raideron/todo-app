@@ -32,8 +32,9 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  const handleEnter = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  /** Ctrl + Enter to save and close */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
       props.onSave();
     }
   };
@@ -46,7 +47,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
 
       <Modal.Body>
         {!!props.localItem && (
-          <Row onKeyDown={handleEnter}>
+          <Row onKeyDown={handleKeyDown}>
             <Col xs={12} className='mb-2'>
               <Form.Label htmlFor='name'>Name</Form.Label>
               <Form.Control
@@ -63,7 +64,6 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
                 id='description'
                 value={props.localItem.description}
                 onChange={(e) => props.onChange({ description: e.target.value })}
-                onKeyDown={(e) => e.stopPropagation()}
                 as='textarea'
                 rows={3}
               />
