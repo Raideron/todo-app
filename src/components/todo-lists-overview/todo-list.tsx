@@ -94,9 +94,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     startQuest();
 
     if (!openedItem.id) {
-      await todoListItemCreationMutation.mutateAsync(openedItem);
+      todoListItemCreationMutation.mutateAsync(openedItem);
     } else {
-      await todoListItemMutation.mutateAsync(openedItem);
+      todoListItemMutation.mutateAsync(openedItem);
     }
 
     if (refineList.length > 0) {
