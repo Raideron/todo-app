@@ -91,7 +91,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       return;
     }
 
-    startQuest();
+    startQuestSound();
 
     if (!openedItem.id) {
       todoListItemCreationMutation.mutateAsync(openedItem);
@@ -106,8 +106,17 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
+  const handleModalCloseBtn = () => {
+    if (!openedItem) {
+      return;
+    }
+
+    setOpenedItem(null);
+    setRefineList([]);
+  };
+
   /** Plays a sound when refining a new task */
-  const startQuest = () => {
+  const startQuestSound = () => {
     const newItem = openedItem;
     const oldItem = todoListItemsQuery.data?.find((item) => item.id === newItem?.id) ?? undefined;
 
@@ -382,7 +391,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           })
         }
         onSave={handleModalSaveBtn}
-        onClose={handleModalSaveBtn}
+        onClose={handleModalCloseBtn}
         onNextPrev={handleNextPrev}
       />
     </div>
