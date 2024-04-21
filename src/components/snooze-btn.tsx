@@ -24,9 +24,14 @@ export const SnoozeBtn: React.FC<SnoozeBtnProps> = (props) => {
     props.onSnooze(tomorrow);
   };
 
-  const snoozeTillNextMonday = () => {
+  /**
+   * @param targetDayOfTheWeek 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday
+   */
+  const snoozeTillDayOfWeek = (targetDayOfTheWeek: number) => {
     const date = new Date();
-    date.setDate(date.getDate() + ((1 + 7 - date.getDay()) % 7));
+    const currentDay = date.getDay();
+    const daysUntilTargetDay = (targetDayOfTheWeek + 7 - currentDay) % 7;
+    date.setDate(date.getDate() + daysUntilTargetDay);
     date.setHours(0);
     date.setMinutes(0);
     date.setSeconds(0);
@@ -41,7 +46,8 @@ export const SnoozeBtn: React.FC<SnoozeBtnProps> = (props) => {
       <Dropdown.Item onClick={() => snoozeForDuration(60)}>1 hour</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeForDuration(60 * 24)}>1 day</Dropdown.Item>
       <Dropdown.Item onClick={snoozeTillTomorrow}>Tomorrow</Dropdown.Item>
-      <Dropdown.Item onClick={snoozeTillNextMonday}>Next Monday</Dropdown.Item>
+      <Dropdown.Item onClick={() => snoozeTillDayOfWeek(1)}>Next Monday</Dropdown.Item>
+      <Dropdown.Item onClick={() => snoozeTillDayOfWeek(4)}>Next Thursday</Dropdown.Item>
     </DropdownButton>
   );
 };
