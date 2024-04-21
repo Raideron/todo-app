@@ -20,6 +20,7 @@ export const TodoListItemSchema = z.object({
   todo_list_id: z.string(),
   isCompleted: z.boolean(),
   confidence: z.number(),
+  intervalInDays: z.number(),
 });
 
 export interface TodoListItem extends z.infer<typeof TodoListItemSchema> {}

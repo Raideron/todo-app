@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, ButtonGroup, Col, Form, FormLabel, Modal, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Form, FormLabel, InputGroup, Modal, Row } from 'react-bootstrap';
+import { BsXLg } from 'react-icons/bs';
 
 import { TodoListItem } from '@/types/todo-list-item';
 
@@ -106,6 +107,25 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
                 onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
                 type='datetime-local'
               />
+            </Col>
+
+            <Col xs={6} className='mb-2'>
+              <Form.Label htmlFor='intervalInDays'>Repeat every (days)</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  id='intervalInDays'
+                  value={props.localItem.intervalInDays}
+                  onChange={(e) => props.onChange({ intervalInDays: +e.target.value })}
+                  type='number'
+                />
+                <Button
+                  variant='outline-secondary'
+                  onClick={() => props.onChange({ intervalInDays: 0 })}
+                  className='d-flex align-items-center'
+                >
+                  <BsXLg />
+                </Button>
+              </InputGroup>
             </Col>
 
             <Col xs={6} className='mb-2'>

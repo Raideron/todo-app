@@ -72,6 +72,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     estimate: 0,
     impact: 0,
     confidence: 0,
+    intervalInDays: 0,
   };
 
   const handleCreateTodoListItem = async () => {
@@ -133,8 +134,23 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   };
 
   /** Plays a sound when a task is completed */
-  const completeQuest = () => {
-    questCompleteSoundRef.current?.play();
+  const handleTaskCheck = (e: React.ChangeEvent<HTMLInputElement>, item: TodoListItem) => {
+    if (e.target.checked) {
+      questCompleteSoundRef.current?.play();
+
+      if (item.intervalInDays > 0) {
+        const newStartDate = new Date(new Date().setDate(new Date().getDate() + item.intervalInDays));
+        const newItem: TodoListItem = {
+          ...item,
+          id: '',
+          startDate: newStartDate,
+          isCompleted: false,
+        };
+        todoListItemCreationMutation.mutateAsync(newItem);
+      }
+    }
+
+    todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked });
   };
 
   const getRefinementList = () =>
@@ -294,13 +310,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                     className='d-inline-block'
                     type='checkbox'
                     checked={item.isCompleted}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        completeQuest();
-                      }
-
-                      return todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked });
-                    }}
+                    onChange={(e) => handleTaskCheck(e, item)}
                   />
                 </div>
               </td>
