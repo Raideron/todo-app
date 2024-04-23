@@ -20,6 +20,7 @@ import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 import { EditTodoItemModal } from '../edit-item/edit-item';
 import { EditableCell } from '../editable-cell';
 import { SnoozeBtn } from '../snooze-btn';
+import { TodoListProgress } from './todo-list-progress';
 
 interface TodoListCompProps {
   todoList: TodoList;
@@ -264,6 +265,19 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           placeholder='Search'
+        />
+
+        <TodoListProgress
+          todoListId={props.todoList.id}
+          property={(task) => task.impact}
+          periodInDays={7}
+          label='Impact'
+        />
+        <TodoListProgress
+          todoListId={props.todoList.id}
+          property={(task) => task.estimate}
+          periodInDays={7}
+          label='Estimate'
         />
 
         <Button
