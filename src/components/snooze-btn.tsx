@@ -40,10 +40,21 @@ export const SnoozeBtn: React.FC<SnoozeBtnProps> = (props) => {
     props.onSnooze(date);
   };
 
+  const snoozeTillTime = (hours: number, minutes: number) => {
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    props.onSnooze(date);
+  };
+
   return (
     <DropdownButton as={ButtonGroup} variant='outline-primary' title={'Snooze'}>
       <Dropdown.Item onClick={() => snoozeForDuration(10)}>10 minutes</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeForDuration(60)}>1 hour</Dropdown.Item>
+      <Dropdown.Item onClick={() => snoozeTillTime(13, 0)}>Afternoon</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeForDuration(60 * 24)}>1 day</Dropdown.Item>
       <Dropdown.Item onClick={snoozeTillTomorrow}>Tomorrow</Dropdown.Item>
       <Dropdown.Item onClick={() => snoozeTillDayOfWeek(1)}>Next Monday</Dropdown.Item>
