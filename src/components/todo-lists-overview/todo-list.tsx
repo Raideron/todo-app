@@ -42,6 +42,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
+  const snoozeSoundRef = useRef<HTMLAudioElement>(null);
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
@@ -154,6 +155,11 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked });
   };
 
+  const handleSnoozeBtn = (task: TodoListItem, newStartDate: Date) => {
+    todoListItemMutation.mutate({ ...task, startDate: newStartDate });
+    snoozeSoundRef.current?.play();
+  };
+
   const getRefinementList = () =>
     todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((x) => !isTaskRefined(x)) ?? [];
 
@@ -237,6 +243,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     <div>
       <audio ref={questStartSoundRef} preload='auto' src='/sounds/iQuestActivate.mp3' />
       <audio ref={questCompleteSoundRef} preload='auto' src='/sounds/iQuestComplete.mp3' />
+      <audio ref={snoozeSoundRef} preload='auto' src='/sounds/SealOfMight.mp3' />
 
       <div className='d-flex p-2 gap-2 flex-wrap'>
         <Button onClick={handleCreateTodoListItem} variant='primary' className='d-flex text-nowrap align-items-center'>
@@ -387,10 +394,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
               <td style={{ width: 1 }}>
                 <ButtonGroup>
-                  <SnoozeBtn
-                    task={item}
-                    onSnooze={(newStartDate) => todoListItemMutation.mutate({ ...item, startDate: newStartDate })}
-                  />
+                  <SnoozeBtn task={item} onSnooze={(newStartDate) => handleSnoozeBtn(item, newStartDate)} />
                   <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
                     <BsPencil />
                   </Button>
