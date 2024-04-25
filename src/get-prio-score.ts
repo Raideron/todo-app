@@ -12,7 +12,7 @@ export const getPrioScore = (item: TodoListItem): number => {
   const impact = item.impact || 2;
   const confidence = item.confidence || 80;
   const estimate = item.estimate || 1;
-  const daysRemaining = getDaysRemaining(item.deadline) ?? 30;
+  const daysRemaining = Math.min(getDaysRemaining(item.deadline) ?? 30, 30);
 
   return (impact * confidence) / (Math.max(estimate, 0.01) * Math.max(daysRemaining, 0.0001));
 };
