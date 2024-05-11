@@ -48,7 +48,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
     const completedAfterCutoffDateSum = getCompletedAfterCutoffDateSum(periodInDays, property);
     const progressNet = addedAfterCutoffDateSum - completedAfterCutoffDateSum;
     const incompleteSum = sum(todoListItems.filter((task) => task.isCompleted === false).map((task) => task[property]));
-    return progressNet / Math.max(incompleteSum, 1);
+    return progressNet / (incompleteSum || 1);
   };
 
   const getColorVariant = (periodInDays: number, property: keyof TodoListItem): string => {
