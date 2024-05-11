@@ -3,8 +3,8 @@
 import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
-import { Badge, Button, ButtonGroup, Form, Table } from 'react-bootstrap';
-import { BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
+import { Badge, Button, ButtonGroup, Dropdown, DropdownButton, Form, Table } from 'react-bootstrap';
+import { BsGear, BsPencil, BsPlusLg, BsTrash } from 'react-icons/bs';
 import { z } from 'zod';
 
 import { getEstimateDisplayValue } from '@/estimate-display-value';
@@ -246,7 +246,12 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       <audio ref={snoozeSoundRef} preload='auto' src='/sounds/SealOfMight.mp3' />
 
       <div className='d-flex p-2 gap-2 flex-wrap'>
-        <Button onClick={handleCreateTodoListItem} variant='primary' className='d-flex text-nowrap align-items-center'>
+        <Button
+          onClick={handleCreateTodoListItem}
+          variant='primary'
+          className='d-flex text-nowrap align-items-center'
+          style={{ height: 'fit-content' }}
+        >
           <BsPlusLg className='me-1' />
           New task
         </Button>
@@ -256,6 +261,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           variant={getRefinementList().length ? 'outline-primary' : 'outline-secondary'}
           disabled={!getRefinementList().length}
           className='text-nowrap'
+          style={{ height: 'fit-content' }}
         >
           Refine list
           {getRefinementList().length > 0 && (
@@ -267,7 +273,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
         <Form.Control
           className='d-flex'
-          style={{ width: 'auto' }}
+          style={{ width: 'auto', height: 'fit-content' }}
           type='search'
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
@@ -276,24 +282,16 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
         <TodoListProgress todoListId={props.todoList.id} properties={['impact', 'estimate']} />
 
-        <Button
-          variant='outline-danger'
-          className='d-flex align-items-center text-nowrap'
-          onClick={deleteCompletedTasks}
-        >
-          <BsTrash className='me-1' />
-          Delete all completed tasks
-        </Button>
-
-        <ButtonGroup className='d-flex'>
-          <Button onClick={handleExport} variant='outline-secondary' className='text-nowrap'>
-            Export list
-          </Button>
-          <Button onClick={handleImport} variant='outline-secondary' className='text-nowrap'>
-            Import list
-          </Button>
-        </ButtonGroup>
+        <DropdownButton variant='outline-secondary' title={<BsGear />}>
+          <Dropdown.Item onClick={handleExport}>Export list</Dropdown.Item>
+          <Dropdown.Item onClick={handleImport}>Import list</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={deleteCompletedTasks} className='text-danger'>
+            Delete all completed tasks
+          </Dropdown.Item>
+        </DropdownButton>
       </div>
+
       <Table striped borderless hover className='m-0' responsive>
         <thead onClick={() => setEditingCell(null)}>
           <tr>
