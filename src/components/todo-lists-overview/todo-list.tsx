@@ -274,18 +274,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           placeholder='Search'
         />
 
-        <TodoListProgress
-          todoListId={props.todoList.id}
-          property={(task) => task.impact}
-          periodInDays={7}
-          label='Impact'
-        />
-        <TodoListProgress
-          todoListId={props.todoList.id}
-          property={(task) => task.estimate}
-          periodInDays={7}
-          label='Estimate'
-        />
+        <TodoListProgress todoListId={props.todoList.id} properties={['impact', 'estimate']} />
 
         <Button
           variant='outline-danger'

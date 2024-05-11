@@ -1,65 +1,107 @@
 import { sum } from 'lodash';
 import React from 'react';
-import { Badge, Col, Row } from 'react-bootstrap';
+import { Badge, Table } from 'react-bootstrap';
 
 import { useGetTodoListItems } from '@/hooks/useGetTodoListItems';
 import { TodoListItem } from '@/types/todo-list-item';
 
 interface TodoListProgressProps {
   todoListId: string;
-  label: string;
-  property: (task: TodoListItem) => number;
-  periodInDays: number;
+  properties: (keyof TodoListItem)[];
 }
 
 export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
   const todoListItemsQuery = useGetTodoListItems(props.todoListId);
   const todoListItems = todoListItemsQuery.data ?? [];
 
-  const formatPercent = Intl.NumberFormat('en-US', {
+  /** Format percent */
+  const fp = Intl.NumberFormat('en-US', {
     style: 'percent',
     maximumFractionDigits: 0,
   });
-  const formatNumber = Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    maximumFractionDigits: 2,
-  });
 
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - props.periodInDays);
+  const getCutoffDate = (periodInDays: number): Date => {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - periodInDays);
+    return cutoffDate;
+  };
 
-  const addedAfterCutoffDateList = todoListItems
-    .filter((task) => task.created >= cutoffDate)
-    .filter((task) => task.isCompleted === false);
-  const addedAfterCutoffDateSum = sum(addedAfterCutoffDateList.map(props.property));
+  const getAddedAfterCutoffDateSum = (periodInDays: number, property: keyof TodoListItem): number => {
+    const cutoffDate = getCutoffDate(periodInDays);
+    const addedAfterCutoffDateList = todoListItems
+      .filter((task) => task.created >= cutoffDate)
+      .filter((task) => task.isCompleted === false);
+    return sum(addedAfterCutoffDateList.map((task) => task[property]));
+  };
 
-  const completedAfterCutoffDateList = todoListItems
-    .filter((task) => task.updated >= cutoffDate)
-    .filter((task) => task.created < cutoffDate)
-    .filter((task) => task.isCompleted === true);
-  const completedAfterCutoffDateSum = sum(completedAfterCutoffDateList.map(props.property));
+  const getCompletedAfterCutoffDateSum = (periodInDays: number, property: keyof TodoListItem): number => {
+    const cutoffDate = getCutoffDate(periodInDays);
+    const completedAfterCutoffDateList = todoListItems
+      .filter((task) => task.updated >= cutoffDate)
+      .filter((task) => task.created < cutoffDate)
+      .filter((task) => task.isCompleted === true);
+    return sum(completedAfterCutoffDateList.map((task) => task[property]));
+  };
 
-  const progressNet = addedAfterCutoffDateSum - completedAfterCutoffDateSum;
-  const incompleteSum = sum(todoListItems.filter((task) => task.isCompleted === false).map(props.property));
-  const progressPercent = progressNet / Math.max(incompleteSum, 1);
+  const getProgressPercent = (periodInDays: number, property: keyof TodoListItem): number => {
+    const addedAfterCutoffDateSum = getAddedAfterCutoffDateSum(periodInDays, property);
+    const completedAfterCutoffDateSum = getCompletedAfterCutoffDateSum(periodInDays, property);
+    const progressNet = addedAfterCutoffDateSum - completedAfterCutoffDateSum;
+    const incompleteSum = sum(todoListItems.filter((task) => task.isCompleted === false).map((task) => task[property]));
+    return progressNet / Math.max(incompleteSum, 1);
+  };
 
-  let bg = 'secondary';
-  if (progressNet > 0) {
-    bg = 'danger';
-  }
-  if (progressNet < 0) {
-    bg = 'success';
-  }
+  const getColorVariant = (periodInDays: number, property: keyof TodoListItem): string => {
+    let variant = '';
+    const progressPercent = getProgressPercent(periodInDays, property);
+
+    if (progressPercent > 0) {
+      variant = 'danger';
+    }
+    if (progressPercent < 0) {
+      variant = 'success';
+    }
+    return variant;
+  };
 
   return (
-    <Badge bg={bg}>
-      <Row className='g-0'>
-        <Col xs={12}>{props.label}</Col>
-        <Col
-          xs={12}
-        >{`+${formatNumber.format(addedAfterCutoffDateSum)} -${formatNumber.format(completedAfterCutoffDateSum)}`}</Col>
-        <Col xs={12}>{`${formatNumber.format(progressNet)} ${formatPercent.format(progressPercent)}`}</Col>
-      </Row>
+    <Badge bg={'white'}>
+      <Table borderless size='sm' style={{ background: 'transparent' }}>
+        <thead>
+          <tr>
+            <th />
+            {props.properties.map((property) => (
+              <th key={property}>{property}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            {props.properties.map((property) => (
+              <td key={property} className={`text-${getColorVariant(1, property)}`}>
+                {fp.format(getProgressPercent(1, property))}
+              </td>
+            ))}
+          </tr>
+          <tr>
+            <td>7</td>
+            {props.properties.map((property) => (
+              <td key={property} className={`text-${getColorVariant(1, property)}`}>
+                {fp.format(getProgressPercent(7, property))}
+              </td>
+            ))}
+          </tr>
+          <tr>
+            <td>30</td>
+            {props.properties.map((property) => (
+              <td key={property} className={`text-${getColorVariant(1, property)}`}>
+                {fp.format(getProgressPercent(30, property))}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </Table>
     </Badge>
   );
 };
