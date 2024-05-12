@@ -87,7 +87,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
           <tr>
             <td>7</td>
             {props.properties.map((property) => (
-              <td key={property} className={`text-${getColorVariant(1, property)}`}>
+              <td key={property} className={`text-${getColorVariant(7, property)}`}>
                 {fp.format(getProgressPercent(7, property))}
               </td>
             ))}
@@ -95,7 +95,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
           <tr>
             <td>30</td>
             {props.properties.map((property) => (
-              <td key={property} className={`text-${getColorVariant(1, property)}`}>
+              <td key={property} className={`text-${getColorVariant(30, property)}`}>
                 {fp.format(getProgressPercent(30, property))}
               </td>
             ))}
