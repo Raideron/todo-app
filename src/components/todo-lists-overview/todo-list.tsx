@@ -18,7 +18,7 @@ import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 import { EditTodoItemModal } from '../edit-item/edit-item';
-import { EditableCell } from '../editable-cell';
+import { Cell } from '../editable-cell';
 import { SnoozeBtn } from '../snooze-btn';
 import { TodoListProgress } from './todo-list-progress';
 
@@ -36,7 +36,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const todoListItemDeletionMutation = useDeleteTodoListItem();
 
   const [searchText, setSearchText] = useState('');
-  const [editingCell, setEditingCell] = useState<{ id: string; field: keyof TodoListItem } | null>(null);
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
   const [refineList, setRefineList] = useState<string[]>([]);
 
@@ -293,7 +292,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
       </div>
 
       <Table striped borderless hover className='m-0' responsive>
-        <thead onClick={() => setEditingCell(null)}>
+        <thead>
           <tr>
             <th />
             <th>Name</th>
@@ -323,55 +322,20 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
                 </div>
               </td>
 
-              <EditableCell
-                value={item.name}
-                type='text'
-                onChange={(value) => todoListItemMutation.mutate({ ...item, name: value })}
-                isEditing={editingCell?.id === item.id && editingCell.field === 'name'}
-                onClick={() => setEditingCell({ id: item.id, field: 'name' })}
-                onEnter={() => setEditingCell(null)}
-                isComplete={item.isCompleted}
-                subText={item.description}
-              />
+              <Cell value={item.name} type='text' isComplete={item.isCompleted} subText={item.description} />
 
               {windowWidth > minWidthForExtraColumns && (
                 <>
-                  <EditableCell
-                    value={item.impact || null}
+                  <Cell value={item.impact || null} type='number' isComplete={item.isCompleted} width={'5em'} />
+
+                  <Cell
+                    value={getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')}
                     type='number'
-                    onChange={(value) => todoListItemMutation.mutate({ ...item, impact: parseFloat(value) })}
-                    isEditing={editingCell?.id === item.id && editingCell.field === 'impact'}
-                    onClick={() => setEditingCell({ id: item.id, field: 'impact' })}
-                    onEnter={() => setEditingCell(null)}
                     isComplete={item.isCompleted}
                     width={'5em'}
                   />
 
-                  <EditableCell
-                    value={
-                      editingCell?.id === item.id && editingCell.field === 'estimate'
-                        ? item.estimate
-                        : getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')
-                    }
-                    type='number'
-                    onChange={(value) => todoListItemMutation.mutate({ ...item, estimate: parseFloat(value) })}
-                    isEditing={editingCell?.id === item.id && editingCell.field === 'estimate'}
-                    onClick={() => setEditingCell({ id: item.id, field: 'estimate' })}
-                    onEnter={() => setEditingCell(null)}
-                    isComplete={item.isCompleted}
-                    width={'5em'}
-                  />
-
-                  <EditableCell
-                    value={item.deadline ?? null}
-                    type='date'
-                    onChange={(value) => todoListItemMutation.mutate({ ...item, deadline: new Date(value) })}
-                    isEditing={editingCell?.id === item.id && editingCell.field === 'deadline'}
-                    onClick={() => setEditingCell({ id: item.id, field: 'deadline' })}
-                    onEnter={() => setEditingCell(null)}
-                    isComplete={item.isCompleted}
-                    width={'12em'}
-                  />
+                  <Cell value={item.deadline ?? null} type='date' isComplete={item.isCompleted} width={'12em'} />
 
                   <td style={{ textDecorationLine: item.isCompleted ? 'line-through' : undefined, width: '6em' }}>
                     {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}

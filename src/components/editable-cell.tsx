@@ -1,37 +1,20 @@
 'use client';
 
 import React from 'react';
-import { Form } from 'react-bootstrap';
 
 import { getDaysRemaining } from '@/get-prio-score';
 
 import { TextWithLinks } from './text-with-links';
 
-interface EditableCellProps {
+interface CellProps {
   value: string | number | Date | null;
   type: 'text' | 'number' | 'date';
   subText?: string;
-  isEditing: boolean;
   isComplete: boolean;
   width?: string | number;
-  onChange: (value: string) => void;
-  onClick: () => void;
-  onEnter: () => void;
 }
 
-export const EditableCell: React.FC<EditableCellProps> = (props) => {
-  const isEditing = props.isEditing;
-
-  const getValue = (): string => {
-    if (props.value === null) {
-      return '';
-    }
-    if (props.type === 'date') {
-      return (props.value as Date).toISOString().split('T')[0];
-    }
-    return props.value.toString();
-  };
-
+export const Cell: React.FC<CellProps> = (props) => {
   const getDisplayValue = (): string => {
     if (props.value === null) {
       return '';
@@ -65,37 +48,21 @@ export const EditableCell: React.FC<EditableCellProps> = (props) => {
   };
 
   return (
-    <td onClick={props.onClick} style={{ width: props.width, maxWidth: '20em' }}>
-      {isEditing ? (
-        <Form.Control
-          autoFocus
-          type={props.type}
-          value={getValue()}
-          onChange={(e) => props.onChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              props.onEnter();
-            }
-          }}
-        />
-      ) : (
-        <>
-          <span className='d-block' style={{ textDecorationLine: props.isComplete ? 'line-through' : undefined }}>
-            {getDisplayValue()}
-          </span>
-          <span
-            className={'d-block text-muted'}
-            style={{
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <TextWithLinks text={props.subText ?? ''} />
-          </span>
-        </>
-      )}
+    <td style={{ width: props.width, maxWidth: '20em' }}>
+      <span className='d-block' style={{ textDecorationLine: props.isComplete ? 'line-through' : undefined }}>
+        {getDisplayValue()}
+      </span>
+      <span
+        className={'d-block text-muted'}
+        style={{
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <TextWithLinks text={props.subText ?? ''} />
+      </span>
     </td>
   );
 };
