@@ -17,8 +17,8 @@ import { isTaskRefined } from '@/item-helper';
 import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
+import { Cell } from '../cell';
 import { EditTodoItemModal } from '../edit-item/edit-item';
-import { Cell } from '../editable-cell';
 import { SnoozeBtn } from '../snooze-btn';
 import { TodoListProgress } from './todo-list-progress';
 
