@@ -75,5 +75,22 @@ body.dark {
 		}
 	}
 
+	// Add styles for form controls in dark mode
+	.form-control {
+		background-color: $gray-700;
+		border-color: $gray-600;
+		color: $light;
+
+		&:focus {
+			background-color: $gray-800;
+			border-color: $primary;
+			box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
+		}
+
+		&::placeholder {
+			color: $gray-500;
+		}
+	}
+
 	// Add more dark mode styles as needed
 }
