@@ -25,6 +25,18 @@ body.dark {
 
 	.card {
 		background-color: $gray-800;
+		border-color: $gray-700;
+		color: $light;
+
+		.card-header {
+			background-color: $gray-900;
+			border-bottom-color: $gray-700;
+		}
+
+		.card-footer {
+			background-color: $gray-900;
+			border-top-color: $gray-700;
+		}
 	}
 
 	.navbar {
@@ -59,19 +71,20 @@ body.dark {
 				background-color: $gray-700;
 			}
 
-			.form-check-input {
-				background-color: $gray-700;
-				border-color: $gray-600;
-
-				&:checked {
-					background-color: $primary;
-					border-color: $primary;
-				}
-			}
-
 			small {
 				color: $gray-400;
 			}
+		}
+	}
+
+	// Form check input styles moved outside of list-group
+	.form-check-input {
+		background-color: $gray-700;
+		border-color: $gray-600;
+
+		&:checked {
+			background-color: $primary;
+			border-color: $primary;
 		}
 	}
 
@@ -89,6 +102,33 @@ body.dark {
 
 		&::placeholder {
 			color: $gray-500;
+		}
+	}
+
+	// Modal styles for dark mode
+	.modal-content {
+		background-color: $gray-800;
+		border-color: $gray-700;
+	}
+
+	.modal-header {
+		border-bottom-color: $gray-700;
+	}
+
+	.modal-footer {
+		border-top-color: $gray-700;
+	}
+
+	.modal-title {
+		color: $light;
+	}
+
+	.close {
+		color: $light;
+		text-shadow: none;
+
+		&:hover {
+			color: $gray-300;
 		}
 	}
 
