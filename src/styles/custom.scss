@@ -132,5 +132,38 @@ body.dark {
 		}
 	}
 
+	// Table styles without !important flags
+	.table {
+		color: $light;
+
+		> :not(caption) > * > * {
+			color: $light;
+			background-color: $gray-800;
+			border-bottom-color: $gray-700;
+		}
+
+		> thead {
+			background-color: $gray-900;
+			color: $light;
+		}
+
+		> tbody {
+			background-color: $gray-800;
+		}
+
+		th,
+		td {
+			border-color: $gray-700;
+		}
+
+		&-striped > tbody > tr:nth-of-type(odd) > * {
+			background-color: rgba($gray-700, 0.05);
+		}
+
+		&-hover > tbody > tr:hover > * {
+			background-color: rgba($gray-600, 0.075);
+		}
+	}
+
 	// Add more dark mode styles as needed
 }
