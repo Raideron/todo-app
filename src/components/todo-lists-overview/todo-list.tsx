@@ -1,6 +1,5 @@
 'use client';
 
-import { useWindowSize } from '@react-hook/window-size';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
@@ -25,9 +24,6 @@ interface TodoListCompProps {
 }
 
 export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
-  const [windowWidth] = useWindowSize();
-  const minWidthForExtraColumns = 1000;
-
   const todoListItemsQuery = useGetTodoListItems(props.todoList.id);
   const todoListItemMutation = useUpdateTodoListItem();
   const todoListItemCreationMutation = useCreateTodoListItem();
@@ -291,8 +287,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
       <TodoListTable
         sortedList={sortedList}
-        windowWidth={windowWidth}
-        minWidthForExtraColumns={minWidthForExtraColumns}
         handleTaskCheck={handleTaskCheck}
         handleSnoozeBtn={handleSnoozeBtn}
         setOpenedItem={setOpenedItem}

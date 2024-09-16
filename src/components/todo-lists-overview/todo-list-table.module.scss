@@ -1,0 +1,36 @@
+.listItem {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 1rem;
+	align-items: start;
+}
+
+.checkbox {
+	display: flex;
+	align-items: center;
+}
+
+.content {
+	overflow: hidden;
+}
+
+.completedTask {
+	text-decoration: line-through;
+}
+
+.description {
+	color: #6c757d;
+	margin-top: 0.25rem;
+}
+
+.details {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+}
