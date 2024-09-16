@@ -1,11 +1,10 @@
 .listItem {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) auto;
+	display: grid !important;
+	grid-template-columns: auto 1fr auto;
 	gap: 1rem;
 }
 
 .checkbox {
-	display: flex;
 	align-items: center;
 }
 
