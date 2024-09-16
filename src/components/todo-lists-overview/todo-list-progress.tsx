@@ -65,8 +65,8 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
   };
 
   return (
-    <Badge bg={'white'}>
-      <Table borderless size='sm' style={{ background: 'transparent' }}>
+    <Badge bg='transparent'>
+      <Table borderless size='sm'>
         <thead>
           <tr>
             <th />

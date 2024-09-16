@@ -1,0 +1,79 @@
+// Import Bootstrap functions, variables, and mixins
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Custom variable overrides can go here
+
+// Create a new theme-colors map
+$custom-theme-colors: (
+	"primary": $primary,
+	"secondary": $secondary,
+	// Add other colors as needed
+);
+
+// Merge the custom theme colors with the default theme colors
+$theme-colors: map-merge($theme-colors, $custom-theme-colors);
+
+// Import Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+// Custom styles for dark mode
+body.dark {
+	background-color: $dark;
+	color: $light;
+
+	.card {
+		background-color: $gray-800;
+	}
+
+	.navbar {
+		background-color: $gray-900;
+
+		// Add styles for navbar text
+		.navbar-brand,
+		.nav-link,
+		.navbar-text {
+			color: $light;
+
+			&:hover,
+			&:focus {
+				color: $gray-200;
+			}
+		}
+
+		// Style for active nav items
+		.nav-item.active .nav-link {
+			color: $primary;
+		}
+	}
+
+	// Add ListGroup styles for dark mode
+	.list-group {
+		.list-group-item {
+			background-color: $gray-800;
+			border-color: $gray-700;
+			color: $light;
+
+			&:hover {
+				background-color: $gray-700;
+			}
+
+			.form-check-input {
+				background-color: $gray-700;
+				border-color: $gray-600;
+
+				&:checked {
+					background-color: $primary;
+					border-color: $primary;
+				}
+			}
+
+			small {
+				color: $gray-400;
+			}
+		}
+	}
+
+	// Add more dark mode styles as needed
+}

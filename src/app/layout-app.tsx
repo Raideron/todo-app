@@ -1,10 +1,11 @@
 'use client';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '@/styles/custom.scss';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import AuthWrapper from '@/contexts/auth-context';
+import { ThemeProvider } from '@/contexts/theme-context';
 
 import { LayoutWithContext } from './layout-with-context';
 
@@ -16,10 +17,12 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthWrapper>
-      <QueryClientProvider client={queryClient}>
-        <LayoutWithContext>{children}</LayoutWithContext>
-      </QueryClientProvider>
-    </AuthWrapper>
+    <ThemeProvider>
+      <AuthWrapper>
+        <QueryClientProvider client={queryClient}>
+          <LayoutWithContext>{children}</LayoutWithContext>
+        </QueryClientProvider>
+      </AuthWrapper>
+    </ThemeProvider>
   );
 }

@@ -2,6 +2,7 @@
 
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
 
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { usePbAuth } from '@/contexts/auth-context';
 import { usePbHealthCheck } from '@/hooks/usePbHealthCheck';
 
@@ -14,6 +15,7 @@ export const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ chi
       <Navbar>
         <Container>
           <Navbar.Collapse className='justify-content-end'>
+            <ThemeSwitcher />
             {auth.user && (
               <>
                 <Navbar.Text>Signed in as: {auth.user.name || auth.user.username}</Navbar.Text>
