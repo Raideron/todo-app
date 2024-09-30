@@ -23,39 +23,45 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
   handleSnoozeBtn,
   setOpenedItem,
   todoListItemDeletionMutation,
-}) => (
-  <ListGroup>
-    {sortedList.map((item) => (
-      <ListGroup.Item key={item.id} className={styles.listItem}>
-        <div className={styles.checkbox}>
-          <Form.Check type='checkbox' checked={item.isCompleted} onChange={(e) => handleTaskCheck(e, item)} />
-        </div>
-        <div className={styles.content}>
-          <div className={item.isCompleted ? styles.completedTask : ''}>{item.name}</div>
-          {item.description && (
-            <div className={styles.description}>
-              <small>{item.description}</small>
-            </div>
-          )}
-          <div className={styles.details}>
-            <small>Impact: {item.impact || 'N/A'}</small>
-            <small>Estimate: {getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')}</small>
-            <small>Deadline: {item.deadline ? new Date(item.deadline).toLocaleDateString() : 'N/A'}</small>
-            <small>Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}</small>
+}) => {
+  const formatDate = Intl.DateTimeFormat('nl-NL', {
+    dateStyle: 'short',
+  }).format;
+
+  return (
+    <ListGroup>
+      {sortedList.map((item) => (
+        <ListGroup.Item key={item.id} className={styles.listItem}>
+          <div className={styles.checkbox}>
+            <Form.Check type='checkbox' checked={item.isCompleted} onChange={(e) => handleTaskCheck(e, item)} />
           </div>
-        </div>
-        <div className={styles.actions}>
-          <ButtonGroup vertical>
-            <SnoozeBtn task={item} onSnooze={(newStartDate) => handleSnoozeBtn(item, newStartDate)} />
-            <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
-              <BsPencil />
-            </Button>
-            <Button variant='outline-danger' size='sm' onClick={() => todoListItemDeletionMutation.mutate(item)}>
-              <BsTrash />
-            </Button>
-          </ButtonGroup>
-        </div>
-      </ListGroup.Item>
-    ))}
-  </ListGroup>
-);
+          <div className={styles.content}>
+            <div className={item.isCompleted ? styles.completedTask : ''}>{item.name}</div>
+            {item.description && (
+              <div className={styles.description}>
+                <small>{item.description}</small>
+              </div>
+            )}
+            <div className={styles.details}>
+              <small>Impact: {item.impact || 'N/A'}</small>
+              <small>Estimate: {getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')}</small>
+              <small>Deadline: {item.deadline ? formatDate(item.deadline) : 'N/A'}</small>
+              <small>Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}</small>
+            </div>
+          </div>
+          <div className={styles.actions}>
+            <ButtonGroup vertical>
+              <SnoozeBtn task={item} onSnooze={(newStartDate) => handleSnoozeBtn(item, newStartDate)} />
+              <Button variant='outline-primary' size='sm' onClick={() => setOpenedItem(item)}>
+                <BsPencil />
+              </Button>
+              <Button variant='outline-danger' size='sm' onClick={() => todoListItemDeletionMutation.mutate(item)}>
+                <BsTrash />
+              </Button>
+            </ButtonGroup>
+          </div>
+        </ListGroup.Item>
+      ))}
+    </ListGroup>
+  );
+};
