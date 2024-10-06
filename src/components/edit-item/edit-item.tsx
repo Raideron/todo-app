@@ -18,7 +18,7 @@ interface EditTodoItemModalProps {
 export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
   const showModal = !!props.localItem;
 
-  /** Returns string in format "yyyy-MM-ddThh:mm" */
+  /** Returns string in format "yyyy-MM-ddThh:mm" or an empty string if date is undefined */
   const getDatetimeLocalString = (date: Date | undefined): string => {
     if (!date) {
       return '';
@@ -31,6 +31,15 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
     const minutes = date.getMinutes().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  /** Handles date input changes, setting to undefined if empty string */
+  const handleDateChange = (
+    field: 'startDate' | 'deadline',
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    props.onChange({ [field]: value ? new Date(value) : undefined });
   };
 
   /** Ctrl + Enter to save and close */
@@ -95,7 +104,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Control
                 id='startDate'
                 value={getDatetimeLocalString(props.localItem.startDate)}
-                onChange={(e) => props.onChange({ startDate: new Date(e.target.value) })}
+                onChange={(e) => handleDateChange('startDate', e)}
                 type='datetime-local'
               />
             </Col>
@@ -104,7 +113,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Control
                 id='deadline'
                 value={getDatetimeLocalString(props.localItem.deadline)}
-                onChange={(e) => props.onChange({ deadline: new Date(e.target.value) })}
+                onChange={(e) => handleDateChange('deadline', e)}
                 type='datetime-local'
               />
             </Col>
