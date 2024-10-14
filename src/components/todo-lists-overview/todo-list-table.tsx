@@ -1,3 +1,4 @@
+import { UseMutationResult } from '@tanstack/react-query';
 import React from 'react';
 import { Button, ButtonGroup, Form, ListGroup } from 'react-bootstrap';
 import { BsPencil, BsTrash } from 'react-icons/bs';
@@ -14,7 +15,7 @@ interface TodoListTableProps {
   handleTaskCheck: (e: React.ChangeEvent<HTMLInputElement>, item: TodoListItem) => void;
   handleSnoozeBtn: (task: TodoListItem, newStartDate: Date) => void;
   setOpenedItem: (item: TodoListItem) => void;
-  todoListItemDeletionMutation: any; // Replace 'any' with the actual type
+  todoListItemDeletionMutation: UseMutationResult;
 }
 
 export const TodoListTable: React.FC<TodoListTableProps> = ({
@@ -45,7 +46,12 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
             <div className={styles.details}>
               <small>Impact: {item.impact || 'N/A'}</small>
               <small>Estimate: {getEstimateDisplayValue(item.estimate, item.estimate < 1 ? 'm' : 'h')}</small>
-              <small>Deadline: {item.deadline ? formatDate(item.deadline) : 'N/A'}</small>
+              <small>
+                Deadline: <wbr />
+                <span style={{ wordWrap: 'normal', textWrap: 'nowrap' }}>
+                  {item.deadline ? formatDate(item.deadline) : 'N/A'}
+                </span>
+              </small>
               <small>Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}</small>
             </div>
           </div>
