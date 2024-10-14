@@ -5,3 +5,5 @@
 next.config.js
 
 /public
+/.next
+node_modules

@@ -16,7 +16,7 @@ interface TodoListTableProps {
   handleTaskCheck: (e: React.ChangeEvent<HTMLInputElement>, item: TodoListItem) => void;
   handleSnoozeBtn: (task: TodoListItem, newStartDate: Date) => void;
   setOpenedItem: (item: TodoListItem) => void;
-  todoListItemDeletionMutation: UseMutationResult;
+  todoListItemDeletionMutation: UseMutationResult<void, Error, TodoListItem, void>;
 }
 
 export const TodoListTable: React.FC<TodoListTableProps> = ({
