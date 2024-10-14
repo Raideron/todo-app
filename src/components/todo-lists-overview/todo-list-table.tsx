@@ -8,6 +8,7 @@ import { getPrioScore } from '@/get-prio-score';
 import { TodoListItem } from '@/types/todo-list-item';
 
 import { SnoozeBtn } from '../snooze-btn';
+import { TextWithLinks } from '../text-with-links';
 import styles from './todo-list-table.module.scss';
 
 interface TodoListTableProps {
@@ -40,7 +41,7 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
             <div className={item.isCompleted ? styles.completedTask : ''}>{item.name}</div>
             {item.description && (
               <div className={styles.description}>
-                <small>{item.description}</small>
+                <TextWithLinks text={item.description} />
               </div>
             )}
             <div className={styles.details}>
