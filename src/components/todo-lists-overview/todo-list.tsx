@@ -63,7 +63,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     updated: new Date(),
     name: '',
     todo_list_id: props.todoList.id,
-    isCompleted: false,
+    completed: undefined,
     estimate: 0,
     impact: 0,
     confidence: 0,
@@ -139,13 +139,13 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           ...item,
           id: '',
           startDate: newStartDate,
-          isCompleted: false,
+          completed: undefined,
         };
         todoListItemCreationMutation.mutateAsync(newItem);
       }
     }
 
-    todoListItemMutation.mutate({ ...item, isCompleted: e.target.checked });
+    todoListItemMutation.mutate({ ...item, completed: e.target.checked ? new Date() : undefined });
   };
 
   const handleSnoozeBtn = (task: TodoListItem, newStartDate: Date) => {
@@ -154,7 +154,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   };
 
   const getRefinementList = () =>
-    todoListItemsQuery.data?.filter((item) => !item.isCompleted).filter((x) => !isTaskRefined(x)) ?? [];
+    todoListItemsQuery.data?.filter((item) => !item.completed).filter((x) => !isTaskRefined(x)) ?? [];
 
   const startRefining = () => {
     const itemsToRefine = getRefinementList();
@@ -171,7 +171,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   };
 
   const deleteCompletedTasks = async () => {
-    const completedTasks = todoListItemsQuery.data?.filter((item) => item.isCompleted) ?? [];
+    const completedTasks = todoListItemsQuery.data?.filter((item) => item.completed) ?? [];
     await Promise.all(completedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
   };
 

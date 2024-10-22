@@ -35,10 +35,10 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
       {sortedList.map((item) => (
         <ListGroup.Item key={item.id} className={styles.listItem}>
           <div className={styles.checkbox}>
-            <Form.Check type='checkbox' checked={item.isCompleted} onChange={(e) => handleTaskCheck(e, item)} />
+            <Form.Check type='checkbox' checked={!!item.completed} onChange={(e) => handleTaskCheck(e, item)} />
           </div>
           <div className={styles.content}>
-            <div className={item.isCompleted ? styles.completedTask : ''}>{item.name}</div>
+            <div className={item.completed ? styles.completedTask : ''}>{item.name}</div>
             {item.description && (
               <div className={styles.description}>
                 <TextWithLinks text={item.description} />
@@ -53,7 +53,13 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
                   {item.deadline ? formatDate(item.deadline) : 'N/A'}
                 </span>
               </small>
-              <small>Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}</small>
+              {item.completed ? (
+                <small>Completed on: {formatDate(item.completed)}</small>
+              ) : (
+                <small>
+                  Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
+                </small>
+              )}
             </div>
           </div>
           <div className={styles.actions}>

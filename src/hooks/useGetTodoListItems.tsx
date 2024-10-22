@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { GET_TODO_LIST_ITEMS } from '@/api/api-keys';
 import { pb } from '@/pocketbase';
-import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
+import { TodoListItemSchema } from '@/types/todo-list-item';
 
 export const useGetTodoListItems = (todoListId: string) => {
   const findingQuery = useQuery({
@@ -15,9 +15,14 @@ export const useGetTodoListItems = (todoListId: string) => {
         filter: `todo_list_id = "${todoListId}"`,
       });
 
-      const items = result.map<TodoListItem>((item) => TodoListItemSchema.parse(item));
-
-      return items;
+      try {
+        const items = await TodoListItemSchema.array().parseAsync(result);
+        return items;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        return [];
+      }
     },
     enabled: !!todoListId,
     refetchInterval: 1000 * 60 * 5,

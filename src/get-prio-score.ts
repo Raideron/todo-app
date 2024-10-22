@@ -1,7 +1,7 @@
 import { TodoListItem } from './types/todo-list-item';
 
 export const getPrioScore = (item: TodoListItem): number => {
-  if (item.isCompleted) {
+  if (item.completed) {
     return -2;
   }
 
