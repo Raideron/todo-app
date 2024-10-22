@@ -63,7 +63,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     updated: new Date(),
     name: '',
     todo_list_id: props.todoList.id,
-    completed: undefined,
+    completed: '' as unknown as Date,
     estimate: 0,
     impact: 0,
     confidence: 0,
@@ -139,13 +139,13 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           ...item,
           id: '',
           startDate: newStartDate,
-          completed: undefined,
+          completed: '' as unknown as Date,
         };
         todoListItemCreationMutation.mutateAsync(newItem);
       }
     }
 
-    todoListItemMutation.mutate({ ...item, completed: e.target.checked ? new Date() : undefined });
+    todoListItemMutation.mutate({ ...item, completed: e.target.checked ? new Date() : ('' as unknown as Date) });
   };
 
   const handleSnoozeBtn = (task: TodoListItem, newStartDate: Date) => {

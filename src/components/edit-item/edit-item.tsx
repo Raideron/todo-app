@@ -39,7 +39,7 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const value = e.target.value;
-    props.onChange({ [field]: value ? new Date(value) : undefined });
+    props.onChange({ [field]: value ? new Date(value) : '' });
   };
 
   /** Ctrl + Enter to save and close */
