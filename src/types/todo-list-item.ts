@@ -19,7 +19,10 @@ export const TodoListItemSchema = z.object({
   impact: z.number(),
   todo_list_id: z.string(),
   /** Date and time when the item was completed */
-  completed: z.date({ coerce: true }).optional(),
+  completed: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : undefined)),
   confidence: z.number(),
   intervalInDays: z.number(),
 });

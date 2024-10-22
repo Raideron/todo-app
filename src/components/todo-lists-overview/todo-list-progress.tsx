@@ -14,15 +14,14 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
   const todoListItemsQuery = useGetTodoListItems(props.todoListId);
   const todoListItems = todoListItemsQuery.data ?? [];
 
-  /** Format percent */
-  const fp = Intl.NumberFormat('en-US', {
+  const formatPercent = Intl.NumberFormat('en-US', {
     style: 'percent',
     maximumFractionDigits: 0,
-  });
+  }).format;
 
   const getCutoffDate = (periodInDays: number): Date => {
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - periodInDays);
+    const periodInMs = 1000 * 60 * 60 * 24 * periodInDays;
+    const cutoffDate = new Date(Date.now() - periodInMs);
     return cutoffDate;
   };
 
@@ -39,7 +38,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
     const completedAfterCutoffDateList = todoListItems
       .filter((task) => task.updated >= cutoffDate)
       .filter((task) => task.created < cutoffDate)
-      .filter((task) => !!task.completed);
+      .filter((task) => task.completed && task.completed >= cutoffDate);
     return sum(completedAfterCutoffDateList.map((task) => task[property]));
   };
 
@@ -80,7 +79,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
             <td>1</td>
             {props.properties.map((property) => (
               <td key={property} className={`text-${getColorVariant(1, property)}`}>
-                {fp.format(getProgressPercent(1, property))}
+                {formatPercent(getProgressPercent(1, property))}
               </td>
             ))}
           </tr>
@@ -88,7 +87,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
             <td>7</td>
             {props.properties.map((property) => (
               <td key={property} className={`text-${getColorVariant(7, property)}`}>
-                {fp.format(getProgressPercent(7, property))}
+                {formatPercent(getProgressPercent(7, property))}
               </td>
             ))}
           </tr>
@@ -96,7 +95,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
             <td>30</td>
             {props.properties.map((property) => (
               <td key={property} className={`text-${getColorVariant(30, property)}`}>
-                {fp.format(getProgressPercent(30, property))}
+                {formatPercent(getProgressPercent(30, property))}
               </td>
             ))}
           </tr>

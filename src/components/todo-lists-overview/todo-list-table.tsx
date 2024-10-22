@@ -53,7 +53,13 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
                   {item.deadline ? formatDate(item.deadline) : 'N/A'}
                 </span>
               </small>
-              <small>Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}</small>
+              {item.completed ? (
+                <small>Completed on: {formatDate(item.completed)}</small>
+              ) : (
+                <small>
+                  Prio: {Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(getPrioScore(item))}
+                </small>
+              )}
             </div>
           </div>
           <div className={styles.actions}>
