@@ -159,8 +159,8 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
               <Form.Label htmlFor='completed'>Completed</Form.Label>
               <Form.Check
                 id='completed'
-                checked={props.localItem.isCompleted}
-                onChange={(e) => props.onChange({ isCompleted: e.target.checked })}
+                checked={!!props.localItem.completed}
+                onChange={(e) => props.onChange({ completed: e.target.checked ? new Date() : undefined })}
               />
             </Col>
           </Row>

@@ -30,7 +30,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
     const cutoffDate = getCutoffDate(periodInDays);
     const addedAfterCutoffDateList = todoListItems
       .filter((task) => task.created >= cutoffDate)
-      .filter((task) => task.isCompleted === false);
+      .filter((task) => !task.completed);
     return sum(addedAfterCutoffDateList.map((task) => task[property]));
   };
 
@@ -39,7 +39,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
     const completedAfterCutoffDateList = todoListItems
       .filter((task) => task.updated >= cutoffDate)
       .filter((task) => task.created < cutoffDate)
-      .filter((task) => task.isCompleted === true);
+      .filter((task) => !!task.completed);
     return sum(completedAfterCutoffDateList.map((task) => task[property]));
   };
 
@@ -47,7 +47,7 @@ export const TodoListProgress: React.FC<TodoListProgressProps> = (props) => {
     const addedAfterCutoffDateSum = getAddedAfterCutoffDateSum(periodInDays, property);
     const completedAfterCutoffDateSum = getCompletedAfterCutoffDateSum(periodInDays, property);
     const progressNet = addedAfterCutoffDateSum - completedAfterCutoffDateSum;
-    const incompleteSum = sum(todoListItems.filter((task) => task.isCompleted === false).map((task) => task[property]));
+    const incompleteSum = sum(todoListItems.filter((task) => !task.completed).map((task) => task[property]));
     return progressNet / (incompleteSum || 1);
   };
 

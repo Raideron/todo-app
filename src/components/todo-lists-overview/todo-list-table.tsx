@@ -35,10 +35,10 @@ export const TodoListTable: React.FC<TodoListTableProps> = ({
       {sortedList.map((item) => (
         <ListGroup.Item key={item.id} className={styles.listItem}>
           <div className={styles.checkbox}>
-            <Form.Check type='checkbox' checked={item.isCompleted} onChange={(e) => handleTaskCheck(e, item)} />
+            <Form.Check type='checkbox' checked={!!item.completed} onChange={(e) => handleTaskCheck(e, item)} />
           </div>
           <div className={styles.content}>
-            <div className={item.isCompleted ? styles.completedTask : ''}>{item.name}</div>
+            <div className={item.completed ? styles.completedTask : ''}>{item.name}</div>
             {item.description && (
               <div className={styles.description}>
                 <TextWithLinks text={item.description} />
