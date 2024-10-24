@@ -10,11 +10,14 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit --pretty",
     "typecheck:watch": "npm run typecheck -- --watch",
-    "check": "npm run typecheck && npm run lint",
+    "check": "npm run typecheck && npm run lint && npm run test:coverage",
     "git:update": "git fetch && git pull",
     "pi:deploy:next": "npm run git:update && npm ci && npm run build && npm run start",
     "pi:deploy:pb": "npm run git:update && chmod +x ./pocketbase-armv7l && ./pocketbase-armv7l serve --http \"0.0.0.0:8090\"",
-    "dev:pwa": "next build && next start"
+    "dev:pwa": "next build && next start",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.59.13",
@@ -33,6 +36,10 @@
   },
   "devDependencies": {
     "@dword-design/eslint-plugin-import-alias": "^5.1.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.2",
+    "@testing-library/react": "^16.0.1",
+    "@types/jest": "^29.0.0",
     "@types/lodash": "^4.17.12",
     "@types/node": "^22",
     "@types/react": "^18",
@@ -46,7 +53,10 @@
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
