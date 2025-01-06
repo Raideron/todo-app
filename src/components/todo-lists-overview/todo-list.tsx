@@ -181,9 +181,21 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setRefineList(_.tail(itemIdsToRefine));
   };
 
-  const deleteCompletedTasks = async () => {
+  const getOldCompletedTasks = () => {
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
     const completedTasks = todoListItemsQuery.data?.filter((item) => item.completed) ?? [];
-    await Promise.all(completedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
+    return completedTasks.filter(
+      (item) =>
+        item.completed &&
+        item.completed < new Date(Date.now() - thirtyDays) &&
+        item.updated < new Date(Date.now() - thirtyDays),
+    );
+  };
+
+  const deleteCompletedTasks = async () => {
+    const oldCompletedTasks = getOldCompletedTasks();
+
+    await Promise.all(oldCompletedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
   };
 
   const handleExport = () => {
@@ -291,7 +303,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           <Dropdown.Item onClick={handleImport}>Import list</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={deleteCompletedTasks} className='text-danger'>
-            Delete all completed tasks
+            Delete all completed tasks that have been completed for more than 30 days{' '}
+            {`(${getOldCompletedTasks().length})`}
           </Dropdown.Item>
         </DropdownButton>
       </div>
