@@ -254,8 +254,57 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const url = e.dataTransfer.getData('text');
+    if (!url.startsWith('http')) {
+      return;
+    }
+
+    try {
+      // Create a new item with the URL in the description
+      const newItem = {
+        ...newTodoListItem,
+        description: url,
+      };
+
+      // Try to fetch the page title
+      try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const match = html.match(/<title[^>]*>([^<]+)<\/title>/);
+        if (match) {
+          newItem.name = match[1].trim();
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch page title:', error);
+      }
+
+      // If no title was found, use the URL as name
+      if (!newItem.name) {
+        try {
+          const urlObj = new URL(url);
+          newItem.name = urlObj.hostname + urlObj.pathname;
+        } catch {
+          newItem.name = url;
+        }
+      }
+
+      setOpenedItem(newItem);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error handling dropped URL:', error);
+    }
+  };
+
   return (
-    <div>
+    <div onDragOver={handleDragOver} onDrop={handleDrop}>
       <audio ref={questStartSoundRef} preload='auto' src='/sounds/iQuestActivate.mp3' />
       <audio ref={questCompleteSoundRef} preload='auto' src='/sounds/iQuestComplete.mp3' />
       <audio ref={snoozeSoundRef} preload='auto' src='/sounds/SealOfMight.mp3' />
