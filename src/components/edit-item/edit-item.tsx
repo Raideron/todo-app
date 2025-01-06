@@ -4,6 +4,7 @@ import { BsXLg } from 'react-icons/bs';
 
 import { TodoListItem } from '@/types/todo-list-item';
 
+import { MoveToListBtn } from '../move-to-list-btn';
 import { SnoozeBtn } from '../snooze-btn';
 import { EstimateInput } from './estimate-input';
 
@@ -161,6 +162,14 @@ export const EditTodoItemModal: React.FC<EditTodoItemModalProps> = (props) => {
                 id='completed'
                 checked={!!props.localItem.completed}
                 onChange={(e) => props.onChange({ completed: e.target.checked ? new Date() : undefined })}
+              />
+            </Col>
+
+            <Col xs={'auto'} className='mb-2'>
+              <Form.Label className='d-block'>Move to list</Form.Label>
+              <MoveToListBtn
+                task={props.localItem}
+                onMoveToList={(newListId) => props.onChange({ todo_list_id: newListId })}
               />
             </Col>
           </Row>
