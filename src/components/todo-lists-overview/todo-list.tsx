@@ -194,7 +194,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const deleteCompletedTasks = async () => {
     const oldCompletedTasks = getOldCompletedTasks();
-
     await Promise.all(oldCompletedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
   };
 
