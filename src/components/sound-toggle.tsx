@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { BsSoundwave, BsVolumeMute } from 'react-icons/bs';
+import { BsVolumeMute, BsVolumeUp } from 'react-icons/bs';
 
 import { useSound } from '@/contexts/sound-context';
 
@@ -14,7 +14,7 @@ export const SoundToggle: React.FC = () => {
       onClick={() => setSoundEnabled(!soundEnabled)}
       title={soundEnabled ? 'Disable sound effects' : 'Enable sound effects'}
     >
-      {soundEnabled ? <BsSoundwave /> : <BsVolumeMute />}
+      {soundEnabled ? <BsVolumeUp /> : <BsVolumeMute />}
     </Button>
   );
 };
