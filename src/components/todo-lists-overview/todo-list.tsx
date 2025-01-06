@@ -1,5 +1,6 @@
 'use client';
 
+import classNames from 'classnames';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
@@ -17,6 +18,7 @@ import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 import { EditTodoItemModal } from '../edit-item/edit-item';
+import styles from './todo-list.module.scss';
 import { TodoListProgress } from './todo-list-progress';
 import { TodoListTable } from './todo-list-table';
 
@@ -33,6 +35,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [searchText, setSearchText] = useState('');
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
   const [refineList, setRefineList] = useState<string[]>([]);
+  const [isDraggingUrl, setIsDraggingUrl] = useState(false);
+  const dragCounter = useRef(0);
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
@@ -254,12 +258,33 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    dragCounter.current++;
+
+    const items = Array.from(e.dataTransfer.items);
+    const hasUrl = items.some(
+      (item) => item.kind === 'string' && (item.type === 'text/uri-list' || item.type === 'text/plain'),
+    );
+
+    if (hasUrl) {
+      setIsDraggingUrl(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragCounter.current--;
+
+    if (dragCounter.current === 0) {
+      setIsDraggingUrl(false);
+    }
   };
 
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    dragCounter.current = 0;
+    setIsDraggingUrl(false);
 
     const url = e.dataTransfer.getData('text');
     if (!url.startsWith('http')) {
@@ -304,7 +329,13 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   };
 
   return (
-    <div onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div
+      className={classNames(styles.dropZone, { [styles.dragOver]: isDraggingUrl })}
+      onDragEnter={handleDragEnter}
+      onDragOver={(e) => e.preventDefault()}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <audio ref={questStartSoundRef} preload='auto' src='/sounds/iQuestActivate.mp3' />
       <audio ref={questCompleteSoundRef} preload='auto' src='/sounds/iQuestComplete.mp3' />
       <audio ref={snoozeSoundRef} preload='auto' src='/sounds/SealOfMight.mp3' />
