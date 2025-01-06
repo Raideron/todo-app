@@ -6,6 +6,7 @@ import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
 import { z } from 'zod';
 
+import { useSound } from '@/contexts/sound-context';
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
@@ -36,6 +37,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
   const snoozeSoundRef = useRef<HTMLAudioElement>(null);
+
+  const { soundEnabled } = useSound();
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
@@ -113,6 +116,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   /** Plays a sound when refining a new task */
   const startQuestSound = () => {
+    if (!soundEnabled) {
+      return;
+    }
+
     const newItem = openedItem;
     const oldItem = todoListItemsQuery.data?.find((item) => item.id === newItem?.id) ?? undefined;
 
@@ -131,7 +138,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   /** Plays a sound when a task is completed */
   const handleTaskCheck = (e: React.ChangeEvent<HTMLInputElement>, item: TodoListItem) => {
     if (e.target.checked) {
-      questCompleteSoundRef.current?.play();
+      if (soundEnabled) {
+        questCompleteSoundRef.current?.play();
+      }
 
       if (item.intervalInDays > 0) {
         const newStartDate = new Date(new Date().setDate(new Date().getDate() + item.intervalInDays));
@@ -150,7 +159,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const handleSnoozeBtn = (task: TodoListItem, newStartDate: Date) => {
     todoListItemMutation.mutate({ ...task, startDate: newStartDate });
-    snoozeSoundRef.current?.play();
+    if (soundEnabled) {
+      snoozeSoundRef.current?.play();
+    }
   };
 
   const getRefinementList = () =>
