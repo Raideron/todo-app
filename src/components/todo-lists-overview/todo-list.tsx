@@ -1,11 +1,13 @@
 'use client';
 
+import classNames from 'classnames';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
 import { z } from 'zod';
 
+import { useSound } from '@/contexts/sound-context';
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
 import { useDeleteTodoListItem } from '@/hooks/useDeleteTodoListItem';
@@ -16,6 +18,7 @@ import { TodoList } from '@/types/todo-list';
 import { TodoListItem, TodoListItemSchema } from '@/types/todo-list-item';
 
 import { EditTodoItemModal } from '../edit-item/edit-item';
+import styles from './todo-list.module.scss';
 import { TodoListProgress } from './todo-list-progress';
 import { TodoListTable } from './todo-list-table';
 
@@ -32,10 +35,14 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [searchText, setSearchText] = useState('');
   const [openedItem, setOpenedItem] = useState<TodoListItem | null>(null);
   const [refineList, setRefineList] = useState<string[]>([]);
+  const [isDraggingUrl, setIsDraggingUrl] = useState(false);
+  const dragCounter = useRef(0);
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
   const snoozeSoundRef = useRef<HTMLAudioElement>(null);
+
+  const { soundEnabled } = useSound();
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
@@ -113,6 +120,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   /** Plays a sound when refining a new task */
   const startQuestSound = () => {
+    if (!soundEnabled) {
+      return;
+    }
+
     const newItem = openedItem;
     const oldItem = todoListItemsQuery.data?.find((item) => item.id === newItem?.id) ?? undefined;
 
@@ -131,7 +142,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   /** Plays a sound when a task is completed */
   const handleTaskCheck = (e: React.ChangeEvent<HTMLInputElement>, item: TodoListItem) => {
     if (e.target.checked) {
-      questCompleteSoundRef.current?.play();
+      if (soundEnabled) {
+        questCompleteSoundRef.current?.play();
+      }
 
       if (item.intervalInDays > 0) {
         const newStartDate = new Date(new Date().setDate(new Date().getDate() + item.intervalInDays));
@@ -150,7 +163,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const handleSnoozeBtn = (task: TodoListItem, newStartDate: Date) => {
     todoListItemMutation.mutate({ ...task, startDate: newStartDate });
-    snoozeSoundRef.current?.play();
+    if (soundEnabled) {
+      snoozeSoundRef.current?.play();
+    }
   };
 
   const getRefinementList = () =>
@@ -170,9 +185,20 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     setRefineList(_.tail(itemIdsToRefine));
   };
 
-  const deleteCompletedTasks = async () => {
+  const getOldCompletedTasks = () => {
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
     const completedTasks = todoListItemsQuery.data?.filter((item) => item.completed) ?? [];
-    await Promise.all(completedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
+    return completedTasks.filter(
+      (item) =>
+        item.completed &&
+        item.completed < new Date(Date.now() - thirtyDays) &&
+        item.updated < new Date(Date.now() - thirtyDays),
+    );
+  };
+
+  const deleteCompletedTasks = async () => {
+    const oldCompletedTasks = getOldCompletedTasks();
+    await Promise.all(oldCompletedTasks.map((item) => todoListItemDeletionMutation.mutateAsync(item)));
   };
 
   const handleExport = () => {
@@ -232,8 +258,84 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
     }
   };
 
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragCounter.current++;
+
+    const items = Array.from(e.dataTransfer.items);
+    const hasUrl = items.some(
+      (item) => item.kind === 'string' && (item.type === 'text/uri-list' || item.type === 'text/plain'),
+    );
+
+    if (hasUrl) {
+      setIsDraggingUrl(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragCounter.current--;
+
+    if (dragCounter.current === 0) {
+      setIsDraggingUrl(false);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragCounter.current = 0;
+    setIsDraggingUrl(false);
+
+    const url = e.dataTransfer.getData('text');
+    if (!url.startsWith('http')) {
+      return;
+    }
+
+    try {
+      // Create a new item with the URL in the description
+      const newItem = {
+        ...newTodoListItem,
+        description: url,
+      };
+
+      // Try to fetch the page title
+      try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const match = html.match(/<title[^>]*>([^<]+)<\/title>/);
+        if (match) {
+          newItem.name = match[1].trim();
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch page title:', error);
+      }
+
+      // If no title was found, use the URL as name
+      if (!newItem.name) {
+        try {
+          const urlObj = new URL(url);
+          newItem.name = urlObj.hostname + urlObj.pathname;
+        } catch {
+          newItem.name = url;
+        }
+      }
+
+      setOpenedItem(newItem);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error handling dropped URL:', error);
+    }
+  };
+
   return (
-    <div>
+    <div
+      className={classNames(styles.dropZone, { [styles.dragOver]: isDraggingUrl })}
+      onDragEnter={handleDragEnter}
+      onDragOver={(e) => e.preventDefault()}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <audio ref={questStartSoundRef} preload='auto' src='/sounds/iQuestActivate.mp3' />
       <audio ref={questCompleteSoundRef} preload='auto' src='/sounds/iQuestComplete.mp3' />
       <audio ref={snoozeSoundRef} preload='auto' src='/sounds/SealOfMight.mp3' />
@@ -280,7 +382,8 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
           <Dropdown.Item onClick={handleImport}>Import list</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={deleteCompletedTasks} className='text-danger'>
-            Delete all completed tasks
+            Delete all completed tasks that have been completed for more than 30 days{' '}
+            {`(${getOldCompletedTasks().length})`}
           </Dropdown.Item>
         </DropdownButton>
       </div>

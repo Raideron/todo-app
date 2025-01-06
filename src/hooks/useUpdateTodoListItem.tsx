@@ -16,6 +16,8 @@ export const useUpdateTodoListItem = () => {
       queryClient.invalidateQueries({
         queryKey: GET_TODO_LIST_ITEMS(input.todo_list_id),
       });
+
+      // TODO: Invalidate query for source todo list if the todo item was moved to a different list
     },
     onMutate: async (updatedTodoListItem) => {
       // Cancel any outgoing refetches
