@@ -21,14 +21,12 @@ services:
     ports:
       - 8090:8080
     volumes:
-      - pb_data:/app/pb_data
-      - pb_migrations:/app/pb_migrations
+      - pb:/pb/pb_data
     networks:
       - app-network
 
 volumes:
-  pb_data:
-  pb_migrations:
+  pb:
 
 networks:
   app-network:
