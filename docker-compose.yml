@@ -6,10 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3002:3000
+      - 3000:3000
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_PB_URL=http://pocketbase:8080
     depends_on:
       - pocketbase
     networks:
@@ -20,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile.pocketbase
     ports:
-      - 3001:8080
+      - 8090:8080
     volumes:
       - pb_data:/app/pb_data
       - pb_migrations:/app/pb_migrations
