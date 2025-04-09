@@ -7,6 +7,7 @@ import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
 import { z } from 'zod';
 
+import { useActiveTasks } from '@/contexts/active-tasks-context';
 import { useSound } from '@/contexts/sound-context';
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
@@ -37,7 +38,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [refineList, setRefineList] = useState<string[]>([]);
   const [isDraggingUrl, setIsDraggingUrl] = useState(false);
   const dragCounter = useRef(0);
-  const [showOnlyActiveTasks, setShowOnlyActiveTasks] = useState(false);
+  const { showOnlyActiveTasks } = useActiveTasks();
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
@@ -205,10 +206,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         item.completed < new Date(Date.now() - thirtyDays) &&
         item.updated < new Date(Date.now() - thirtyDays),
     );
-  };
-
-  const toggleActiveTasks = () => {
-    setShowOnlyActiveTasks(!showOnlyActiveTasks);
   };
 
   const deleteCompletedTasks = async () => {
@@ -395,10 +392,6 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         <DropdownButton variant='outline-secondary' title={<BsGear />}>
           <Dropdown.Item onClick={handleExport}>Export list</Dropdown.Item>
           <Dropdown.Item onClick={handleImport}>Import list</Dropdown.Item>
-          <Dropdown.Item onClick={toggleActiveTasks}>
-            {`Only show active tasks`}
-            {showOnlyActiveTasks ? ` ✅` : ''}
-          </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={deleteCompletedTasks} className='text-danger'>
             Delete all completed tasks that have been completed for more than 30 days{' '}

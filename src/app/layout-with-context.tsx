@@ -2,6 +2,7 @@
 
 import { Button, Container, Image, Navbar } from 'react-bootstrap';
 
+import { ActiveTasksToggle } from '@/components/active-tasks-toggle';
 import { SoundToggle } from '@/components/sound-toggle';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { usePbAuth } from '@/contexts/auth-context';
@@ -17,6 +18,7 @@ export const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ chi
         <Container>
           <Navbar.Collapse className='justify-content-end'>
             <SoundToggle />
+            <ActiveTasksToggle />
             <ThemeSwitcher />
             {auth.user && (
               <>
