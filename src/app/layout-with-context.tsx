@@ -22,7 +22,6 @@ export const LayoutWithContext: React.FC<{ children: React.ReactNode }> = ({ chi
             <ThemeSwitcher />
             {auth.user && (
               <>
-                <Navbar.Text>Signed in as: {auth.user.name || auth.user.username}</Navbar.Text>
                 <Image
                   className='ms-2 me-3'
                   src={auth.user.avatarUrl}
