@@ -250,7 +250,9 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         item.todo_list_id = props.todoList.id;
       });
 
-      await Promise.all(items.map((item) => todoListItemCreationMutation.mutateAsync(item)));
+      for (const item of items) {
+        await todoListItemCreationMutation.mutateAsync(item);
+      }
     };
 
     input.click();
