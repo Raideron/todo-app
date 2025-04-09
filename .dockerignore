@@ -1,0 +1,32 @@
+node_modules
+npm-debug.log
+
+.next
+out
+
+coverage
+
+.env.local
+.env.*.local
+
+.git
+.gitignore
+.github
+
+
+.vscode
+
+# Docker files
+Dockerfile
+Dockerfile.pocketbase
+docker-compose.yml
+.dockerignore
+
+# PocketBase data and migrations (these will be mounted as volumes)
+pb_data
+
+# PocketBase executables (we'll download them in the Dockerfile)
+pocketbase
+pocketbase.exe
+pocketbase-arm64
+pocketbase-armv7l
