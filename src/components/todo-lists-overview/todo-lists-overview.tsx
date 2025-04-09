@@ -42,9 +42,9 @@ export const TodoListsOverview: React.FC = () => {
   const previousList = _.get(sortedLists, 1);
 
   const isTaskSnoozed = (task: TodoListItem) => task.startDate && task.startDate > new Date();
-  const todoCount = todoListItemsQuery.data?.filter((x) => !x.completed && !isTaskSnoozed(x)).length;
-  const snoozeCount = todoListItemsQuery.data?.filter((x) => !x.completed && isTaskSnoozed(x)).length;
-  const completedCount = todoListItemsQuery.data?.filter((x) => x.completed).length;
+  const todoCount: number = todoListItemsQuery.data?.filter((x) => !x.completed && !isTaskSnoozed(x)).length ?? 0;
+  const snoozeCount: number = todoListItemsQuery.data?.filter((x) => !x.completed && isTaskSnoozed(x)).length ?? 0;
+  const completedCount: number = todoListItemsQuery.data?.filter((x) => x.completed).length ?? 0;
 
   return (
     <Card className='mb-5'>
