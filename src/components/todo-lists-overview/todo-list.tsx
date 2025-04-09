@@ -37,6 +37,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [refineList, setRefineList] = useState<string[]>([]);
   const [isDraggingUrl, setIsDraggingUrl] = useState(false);
   const dragCounter = useRef(0);
+  const [showOnlyActiveTasks, setShowOnlyActiveTasks] = useState(false);
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
@@ -46,6 +47,16 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
+      if (showOnlyActiveTasks) {
+        if (item.completed) {
+          return false;
+        }
+
+        if (item.startDate && item.startDate > new Date()) {
+          return false;
+        }
+      }
+
       const matchesName = item.name.toLowerCase().includes(searchText.toLowerCase());
       if (matchesName) {
         return true;
@@ -194,6 +205,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         item.completed < new Date(Date.now() - thirtyDays) &&
         item.updated < new Date(Date.now() - thirtyDays),
     );
+  };
+
+  const toggleActiveTasks = () => {
+    setShowOnlyActiveTasks(!showOnlyActiveTasks);
   };
 
   const deleteCompletedTasks = async () => {
@@ -380,6 +395,10 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
         <DropdownButton variant='outline-secondary' title={<BsGear />}>
           <Dropdown.Item onClick={handleExport}>Export list</Dropdown.Item>
           <Dropdown.Item onClick={handleImport}>Import list</Dropdown.Item>
+          <Dropdown.Item onClick={toggleActiveTasks}>
+            {`Only show active tasks`}
+            {showOnlyActiveTasks ? ` ✅` : ''}
+          </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={deleteCompletedTasks} className='text-danger'>
             Delete all completed tasks that have been completed for more than 30 days{' '}
