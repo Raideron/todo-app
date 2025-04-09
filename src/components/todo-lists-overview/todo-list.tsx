@@ -7,6 +7,7 @@ import { Badge, Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { BsGear, BsPlusLg } from 'react-icons/bs';
 import { z } from 'zod';
 
+import { useActiveTasks } from '@/contexts/active-tasks-context';
 import { useSound } from '@/contexts/sound-context';
 import { getPrioScore } from '@/get-prio-score';
 import { useCreateTodoListItem } from '@/hooks/useCreateTodoListItem';
@@ -37,6 +38,7 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
   const [refineList, setRefineList] = useState<string[]>([]);
   const [isDraggingUrl, setIsDraggingUrl] = useState(false);
   const dragCounter = useRef(0);
+  const { showOnlyActiveTasks } = useActiveTasks();
 
   const questStartSoundRef = useRef<HTMLAudioElement>(null);
   const questCompleteSoundRef = useRef<HTMLAudioElement>(null);
@@ -46,6 +48,16 @@ export const TodoListComp: React.FC<TodoListCompProps> = (props) => {
 
   const filteredList =
     todoListItemsQuery.data?.filter((item) => {
+      if (showOnlyActiveTasks) {
+        if (item.completed) {
+          return false;
+        }
+
+        if (item.startDate && item.startDate > new Date()) {
+          return false;
+        }
+      }
+
       const matchesName = item.name.toLowerCase().includes(searchText.toLowerCase());
       if (matchesName) {
         return true;
