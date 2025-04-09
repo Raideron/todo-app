@@ -13,6 +13,7 @@ services:
       - pocketbase
     networks:
       - app-network
+    restart: unless-stopped
 
   pocketbase:
     build:
@@ -24,6 +25,7 @@ services:
       - pb:/pb/pb_data
     networks:
       - app-network
+    restart: unless-stopped
 
 volumes:
   pb:
