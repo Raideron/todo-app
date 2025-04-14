@@ -52,10 +52,16 @@ const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   const githubSignIn = () => {
+    if (!githubAuthProvider) {
+      // eslint-disable-next-line no-console
+      console.error('GitHub auth provider is not available');
+      return;
+    }
+
     signOut();
     localStorage.setItem('provider', JSON.stringify(githubAuthProvider));
     const redirectUrl = `${location.origin}/signin`;
-    const url = githubAuthProvider?.authUrl + redirectUrl;
+    const url = `${githubAuthProvider.authUrl}${redirectUrl}`;
 
     router.push(url);
   };
