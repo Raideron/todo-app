@@ -6,9 +6,6 @@ out
 
 coverage
 
-.env.local
-.env.*.local
-
 .git
 .gitignore
 .github
